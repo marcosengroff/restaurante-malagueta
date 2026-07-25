@@ -11,7 +11,6 @@ export function MainLayout() {
   >([])
   const navigate = useNavigate()
   const location = useLocation()
-  const currentCategoryId = new URLSearchParams(location.search).get('categoria')
 
   useEffect(() => {
     listCategoriasPratosMenu()
