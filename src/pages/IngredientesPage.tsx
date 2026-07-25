@@ -1,6 +1,6 @@
 import {
   CheckCircle2,
-  ChevronDown,
+  ChevronRight,
   Edit,
   Plus,
   RotateCcw,
@@ -28,9 +28,7 @@ import { formatCurrency } from '../utils/formatters'
 export function IngredientesPage() {
   const [categorias, setCategorias] = useState<CategoriaIngrediente[]>([])
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([])
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(),
-  )
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<StatusFiltro>('ativos')
   const [isLoading, setIsLoading] = useState(true)
@@ -97,6 +95,16 @@ export function IngredientesPage() {
     })
   }, [categorias, ingredientesPorCategoria, search])
 
+  const selectedCategory = useMemo(() => {
+    if (!selectedCategoryId) return null
+    return categorias.find((cat) => cat.id === selectedCategoryId) ?? null
+  }, [categorias, selectedCategoryId])
+
+  const ingredientesDaCategoriaSelecionada = useMemo(() => {
+    if (!selectedCategoryId) return []
+    return ingredientesPorCategoria.get(selectedCategoryId) ?? []
+  }, [ingredientesPorCategoria, selectedCategoryId])
+
   const temIngredientesSemCategoria = useMemo(() => {
     const ings = ingredientesPorCategoria.get('sem-categoria')
     return ings !== undefined && ings.length > 0
@@ -105,6 +113,11 @@ export function IngredientesPage() {
   async function loadCategorias() {
     const data = await listCategoriasIngredientes()
     setCategorias(data)
+
+    // Auto-select first category if none selected
+    if (data.length > 0 && !selectedCategoryId) {
+      setSelectedCategoryId(data[0].id)
+    }
   }
 
   const loadIngredientes = useCallback(async () => {
@@ -114,18 +127,6 @@ export function IngredientesPage() {
     try {
       const data = await listAllIngredientes(search, status)
       setIngredientes(data)
-
-      const catIds = new Set<string>()
-
-      for (const ing of data) {
-        if (ing.categoria_id) {
-          catIds.add(ing.categoria_id)
-        } else {
-          catIds.add('sem-categoria')
-        }
-      }
-
-      setExpandedCategories(catIds)
     } catch (error) {
       setMessage({
         type: 'error',
@@ -149,28 +150,17 @@ export function IngredientesPage() {
             : 'Nao foi possivel carregar as categorias.',
       })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     loadIngredientes()
   }, [loadIngredientes])
 
-  function toggleCategory(id: string) {
-    setExpandedCategories((prev) => {
-      const next = new Set(prev)
-
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
-
-      return next
-    })
-  }
-
-  function openCreateForm() {
+  function openCreateForm(categoriaId?: string) {
     setEditingIngrediente(null)
+    // We'll use a workaround: set a temp value to pre-select category
+    // The form will be opened and user can select
     setIsFormOpen(true)
   }
 
@@ -269,7 +259,7 @@ export function IngredientesPage() {
         <button
           type="button"
           className="inline-flex items-center justify-center gap-2 rounded bg-red-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-800"
-          onClick={openCreateForm}
+          onClick={() => openCreateForm()}
         >
           <Plus size={18} aria-hidden="true" />
           Novo ingrediente
@@ -344,330 +334,316 @@ export function IngredientesPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {/* Categorias com ingredientes */}
-          {categoriasVisiveis.map((categoria) => {
-            const ings = ingredientesPorCategoria.get(categoria.id) ?? []
-            const isExpanded = expandedCategories.has(categoria.id)
+        <div className="flex flex-col gap-0 overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm lg:flex-row">
+          {/* Sidebar - Category List */}
+          <aside className="w-full border-b border-stone-200 lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
+            <div className="max-h-[calc(100vh-390px)] overflow-y-auto">
+              <div className="space-y-0.5 px-2 py-3">
+                {categoriasVisiveis.map((categoria) => {
+                  const ings = ingredientesPorCategoria.get(categoria.id) ?? []
+                  const isSelected = selectedCategoryId === categoria.id
 
-            return (
-              <div
-                key={categoria.id}
-                className="overflow-hidden rounded border border-stone-200 bg-white shadow-sm"
-              >
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-stone-50"
-                  onClick={() => toggleCategory(categoria.id)}
-                  aria-expanded={isExpanded}
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <ChevronDown
-                      size={18}
-                      className={`shrink-0 text-slate-400 transition-transform ${
-                        isExpanded ? '' : '-rotate-90'
+                  return (
+                    <button
+                      key={categoria.id}
+                      type="button"
+                      className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
+                        isSelected
+                          ? 'bg-red-700 text-white'
+                          : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
                       }`}
-                      aria-hidden="true"
-                    />
-                    <h3 className="truncate text-sm font-semibold uppercase tracking-wide text-slate-950">
-                      {categoria.nome}
-                    </h3>
-                    <span className="shrink-0 rounded bg-stone-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-                      {ings.length}
+                      onClick={() => setSelectedCategoryId(categoria.id)}
+                    >
+                      <div className="flex min-w-0 items-center gap-2">
+                        <ChevronRight
+                          size={14}
+                          className={`shrink-0 transition-transform ${
+                            isSelected ? 'text-white' : 'text-slate-400'
+                          }`}
+                          aria-hidden="true"
+                        />
+                        <span className="truncate font-medium">
+                          {categoria.nome}
+                        </span>
+                      </div>
+                      <span
+                        className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
+                          isSelected
+                            ? 'bg-red-600 text-white'
+                            : 'bg-stone-100 text-slate-500'
+                        }`}
+                      >
+                        {ings.length}
+                      </span>
+                    </button>
+                  )
+                })}
+
+                {temIngredientesSemCategoria && (
+                  <button
+                    type="button"
+                    className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
+                      selectedCategoryId === 'sem-categoria'
+                        ? 'bg-red-700 text-white'
+                        : 'text-slate-500 hover:bg-stone-100 hover:text-slate-950'
+                    }`}
+                    onClick={() => setSelectedCategoryId('sem-categoria')}
+                  >
+                    <div className="flex min-w-0 items-center gap-2">
+                      <ChevronRight
+                        size={14}
+                        className={`shrink-0 transition-transform ${
+                          selectedCategoryId === 'sem-categoria'
+                            ? 'text-white'
+                            : 'text-slate-400'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate font-medium">
+                        Sem categoria
+                      </span>
+                    </div>
+                    <span
+                      className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
+                        selectedCategoryId === 'sem-categoria'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-stone-100 text-slate-500'
+                      }`}
+                    >
+                      {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}
                     </span>
-                  </div>
+                  </button>
+                )}
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content - Ingredient Table */}
+          <div className="min-w-0 flex-1">
+            {selectedCategory ? (
+              <>
+                <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
+                  <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
+                    {selectedCategory.nome}
+                  </h3>
                   <button
                     type="button"
                     className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
-                    aria-label={`Adicionar ingrediente em ${categoria.nome}`}
-                    title="Adicionar ingrediente nesta categoria"
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      setEditingIngrediente(null)
-                      setIsFormOpen(true)
-                    }}
+                    aria-label={`Adicionar ingrediente em ${selectedCategory.nome}`}
+                    title="Adicionar ingrediente"
+                    onClick={() => openCreateForm()}
                   >
-                    <Plus size={15} aria-hidden="true" />
+                    <Plus size={16} aria-hidden="true" />
                   </button>
-                </button>
-
-                {isExpanded && (
-                  <div className="border-t border-stone-200">
-                    {ings.length === 0 ? (
-                      <p className="px-4 py-6 text-center text-sm text-slate-500">
-                        Nenhum ingrediente nesta categoria.
-                      </p>
-                    ) : (
-                      <>
-                        {/* Desktop table */}
-                        <div className="hidden overflow-x-auto lg:block">
-                          <table className="w-full min-w-[600px] border-collapse text-left text-sm">
-                            <thead className="bg-stone-50 text-xs uppercase text-slate-500">
-                              <tr>
-                                <th className="px-4 py-2.5 font-semibold">
-                                  Ingrediente
-                                </th>
-                                <th className="px-4 py-2.5 font-semibold">
-                                  Un.
-                                </th>
-                                <th className="px-4 py-2.5 font-semibold">
-                                  Preco
-                                </th>
-                                <th className="px-4 py-2.5 font-semibold">
-                                  Status
-                                </th>
-                                <th className="px-4 py-2.5 text-right font-semibold">
-                                  Acoes
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-stone-100">
-                              {ings.map((ing) => (
-                                <tr
-                                  key={ing.id}
-                                  className="hover:bg-stone-50/50"
-                                >
-                                  <td className="px-4 py-2.5 font-medium text-slate-950">
-                                    {ing.nome}
-                                  </td>
-                                  <td className="px-4 py-2.5 text-slate-600">
-                                    {ing.unidade_compra}
-                                  </td>
-                                  <td className="px-4 py-2.5 text-slate-600">
-                                    {formatCurrency(ing.preco_embalagem)}
-                                  </td>
-                                  <td className="px-4 py-2.5">
-                                    <span
-                                      className={`rounded px-2 py-0.5 text-xs font-semibold ${
-                                        ing.ativo
-                                          ? 'bg-emerald-50 text-emerald-700'
-                                          : 'bg-stone-100 text-slate-500'
-                                      }`}
-                                    >
-                                      {ing.ativo ? 'Ativo' : 'Inativo'}
-                                    </span>
-                                  </td>
-                                  <td className="px-4 py-2.5">
-                                    <div className="flex justify-end gap-1">
-                                      <button
-                                        type="button"
-                                        className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
-                                        aria-label={`Editar ${ing.nome}`}
-                                        title="Editar"
-                                        onClick={() => openEditForm(ing)}
-                                      >
-                                        <Edit size={16} aria-hidden="true" />
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
-                                        aria-label={
-                                          ing.ativo
-                                            ? `Desativar ${ing.nome}`
-                                            : `Reativar ${ing.nome}`
-                                        }
-                                        title={
-                                          ing.ativo ? 'Desativar' : 'Reativar'
-                                        }
-                                        onClick={() => handleToggleAtivo(ing)}
-                                      >
-                                        {ing.ativo ? (
-                                          <XCircle
-                                            size={16}
-                                            aria-hidden="true"
-                                          />
-                                        ) : (
-                                          <RotateCcw
-                                            size={16}
-                                            aria-hidden="true"
-                                          />
-                                        )}
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-
-                        {/* Mobile cards */}
-                        <div className="grid gap-2 p-3 lg:hidden">
-                          {ings.map((ing) => (
-                            <div
-                              key={ing.id}
-                              className="flex items-center justify-between gap-3 rounded border border-stone-100 px-3 py-2.5"
-                            >
-                              <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-medium text-slate-950">
-                                  {ing.nome}
-                                </p>
-                                <p className="text-xs text-slate-500">
-                                  {ing.unidade_compra} &middot;{' '}
-                                  {formatCurrency(ing.preco_embalagem)}
-                                </p>
-                              </div>
-                              <span
-                                className={`shrink-0 rounded px-2 py-0.5 text-xs font-semibold ${
-                                  ing.ativo
-                                    ? 'bg-emerald-50 text-emerald-700'
-                                    : 'bg-stone-100 text-slate-500'
-                                }`}
-                              >
-                                {ing.ativo ? 'Ativo' : 'Inativo'}
-                              </span>
-                              <div className="flex shrink-0 gap-1">
-                                <button
-                                  type="button"
-                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100"
-                                  aria-label={`Editar ${ing.nome}`}
-                                  onClick={() => openEditForm(ing)}
-                                >
-                                  <Edit size={15} aria-hidden="true" />
-                                </button>
-                                <button
-                                  type="button"
-                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100"
-                                  aria-label={
-                                    ing.ativo
-                                      ? `Desativar ${ing.nome}`
-                                      : `Reativar ${ing.nome}`
-                                  }
-                                  onClick={() => handleToggleAtivo(ing)}
-                                >
-                                  {ing.ativo ? (
-                                    <XCircle size={15} aria-hidden="true" />
-                                  ) : (
-                                    <RotateCcw size={15} aria-hidden="true" />
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-
-          {/* Secao "Sem categoria" */}
-          {temIngredientesSemCategoria && (
-            <div className="overflow-hidden rounded border border-stone-200 bg-white shadow-sm">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-stone-50"
-                onClick={() => toggleCategory('sem-categoria')}
-                aria-expanded={expandedCategories.has('sem-categoria')}
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <ChevronDown
-                    size={18}
-                    className={`shrink-0 text-slate-400 transition-transform ${
-                      expandedCategories.has('sem-categoria')
-                        ? ''
-                        : '-rotate-90'
-                    }`}
-                    aria-hidden="true"
-                  />
-                  <h3 className="truncate text-sm font-semibold uppercase tracking-wide text-slate-500">
-                    Sem categoria
-                  </h3>
-                  <span className="shrink-0 rounded bg-stone-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-                    {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}
-                  </span>
                 </div>
-              </button>
 
-              {expandedCategories.has('sem-categoria') && (
-                <div className="border-t border-stone-200">
-                  <div className="hidden overflow-x-auto lg:block">
-                    <table className="w-full min-w-[600px] border-collapse text-left text-sm">
+                {ingredientesDaCategoriaSelecionada.length === 0 ? (
+                  <div className="flex flex-col items-center gap-3 p-8 text-center">
+                    <p className="text-sm text-slate-500">
+                      Nenhum ingrediente nesta categoria.
+                    </p>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded bg-red-700 px-3 py-2 text-sm font-semibold text-white hover:bg-red-800"
+                      onClick={() => openCreateForm()}
+                    >
+                      <Plus size={16} aria-hidden="true" />
+                      Adicionar ingrediente
+                    </button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[500px] border-collapse text-left text-sm">
                       <thead className="bg-stone-50 text-xs uppercase text-slate-500">
                         <tr>
-                          <th className="px-4 py-2.5 font-semibold">
+                          <th className="w-1/2 px-4 py-3 font-semibold">
                             Ingrediente
                           </th>
-                          <th className="px-4 py-2.5 font-semibold">Un.</th>
-                          <th className="px-4 py-2.5 font-semibold">Preco</th>
-                          <th className="px-4 py-2.5 font-semibold">Status</th>
-                          <th className="px-4 py-2.5 text-right font-semibold">
+                          <th className="w-1/4 px-4 py-3 font-semibold">
+                            Un.
+                          </th>
+                          <th className="w-1/4 px-4 py-3 font-semibold">
+                            Preco
+                          </th>
+                          <th className="px-4 py-3 text-right font-semibold">
                             Acoes
                           </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-stone-100">
-                        {(ingredientesPorCategoria.get('sem-categoria') ?? []).map(
-                          (ing) => (
-                            <tr
-                              key={ing.id}
-                              className="hover:bg-stone-50/50"
-                            >
-                              <td className="px-4 py-2.5 font-medium text-slate-950">
-                                {ing.nome}
-                              </td>
-                              <td className="px-4 py-2.5 text-slate-600">
+                        {ingredientesDaCategoriaSelecionada.map((ing) => (
+                          <tr
+                            key={ing.id}
+                            className={`hover:bg-stone-50/50 transition ${
+                              !ing.ativo ? 'opacity-60' : ''
+                            }`}
+                          >
+                            <td className="px-4 py-3 font-medium text-slate-950">
+                              <div className="flex items-center gap-2">
+                                <span className="truncate">{ing.nome}</span>
+                                {!ing.ativo && (
+                                  <span className="shrink-0 rounded bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-slate-500">
+                                    Inativo
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-slate-600">
+                              {ing.unidade_compra}
+                            </td>
+                            <td className="px-4 py-3 font-medium text-slate-950">
+                              {formatCurrency(ing.preco_embalagem)}
+                              <span className="ml-1 text-xs text-slate-400">
+                                /{ing.quantidade_embalagem}
                                 {ing.unidade_compra}
-                              </td>
-                              <td className="px-4 py-2.5 text-slate-600">
-                                {formatCurrency(ing.preco_embalagem)}
-                              </td>
-                              <td className="px-4 py-2.5">
-                                <span
-                                  className={`rounded px-2 py-0.5 text-xs font-semibold ${
-                                    ing.ativo
-                                      ? 'bg-emerald-50 text-emerald-700'
-                                      : 'bg-stone-100 text-slate-500'
-                                  }`}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex justify-end gap-1">
+                                <button
+                                  type="button"
+                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                                  aria-label={`Editar ${ing.nome}`}
+                                  title="Editar"
+                                  onClick={() => openEditForm(ing)}
                                 >
-                                  {ing.ativo ? 'Ativo' : 'Inativo'}
-                                </span>
-                              </td>
-                              <td className="px-4 py-2.5">
-                                <div className="flex justify-end gap-1">
-                                  <button
-                                    type="button"
-                                    className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
-                                    aria-label={`Editar ${ing.nome}`}
-                                    title="Editar"
-                                    onClick={() => openEditForm(ing)}
-                                  >
-                                    <Edit size={16} aria-hidden="true" />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
-                                    aria-label={
-                                      ing.ativo
-                                        ? `Desativar ${ing.nome}`
-                                        : `Reativar ${ing.nome}`
-                                    }
-                                    title={ing.ativo ? 'Desativar' : 'Reativar'}
-                                    onClick={() => handleToggleAtivo(ing)}
-                                  >
-                                    {ing.ativo ? (
-                                      <XCircle size={16} aria-hidden="true" />
-                                    ) : (
-                                      <RotateCcw
-                                        size={16}
-                                        aria-hidden="true"
-                                      />
-                                    )}
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ),
-                        )}
+                                  <Edit size={16} aria-hidden="true" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                                  aria-label={
+                                    ing.ativo
+                                      ? `Desativar ${ing.nome}`
+                                      : `Reativar ${ing.nome}`
+                                  }
+                                  title={ing.ativo ? 'Desativar' : 'Reativar'}
+                                  onClick={() => handleToggleAtivo(ing)}
+                                >
+                                  {ing.ativo ? (
+                                    <XCircle
+                                      size={16}
+                                      aria-hidden="true"
+                                    />
+                                  ) : (
+                                    <RotateCcw
+                                      size={16}
+                                      aria-hidden="true"
+                                    />
+                                  )}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
+                )}
+              </>
+            ) : selectedCategoryId === 'sem-categoria' ? (
+              <>
+                <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
+                  <h3 className="text-base font-bold uppercase tracking-wide text-slate-500">
+                    Sem categoria
+                  </h3>
+                  <button
+                    type="button"
+                    className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
+                    aria-label="Adicionar ingrediente"
+                    title="Adicionar ingrediente"
+                    onClick={() => openCreateForm()}
+                  >
+                    <Plus size={16} aria-hidden="true" />
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
+
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[500px] border-collapse text-left text-sm">
+                    <thead className="bg-stone-50 text-xs uppercase text-slate-500">
+                      <tr>
+                        <th className="w-1/2 px-4 py-3 font-semibold">
+                          Ingrediente
+                        </th>
+                        <th className="w-1/4 px-4 py-3 font-semibold">Un.</th>
+                        <th className="w-1/4 px-4 py-3 font-semibold">Preco</th>
+                        <th className="px-4 py-3 text-right font-semibold">Acoes</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-100">
+                      {(ingredientesPorCategoria.get('sem-categoria') ?? []).map(
+                        (ing) => (
+                          <tr
+                            key={ing.id}
+                            className={`hover:bg-stone-50/50 transition ${
+                              !ing.ativo ? 'opacity-60' : ''
+                            }`}
+                          >
+                            <td className="px-4 py-3 font-medium text-slate-950">
+                              <div className="flex items-center gap-2">
+                                <span>{ing.nome}</span>
+                                {!ing.ativo && (
+                                  <span className="shrink-0 rounded bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-slate-500">
+                                    Inativo
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-slate-600">
+                              {ing.unidade_compra}
+                            </td>
+                            <td className="px-4 py-3 font-medium text-slate-950">
+                              {formatCurrency(ing.preco_embalagem)}
+                              <span className="ml-1 text-xs text-slate-400">
+                                /{ing.quantidade_embalagem}
+                                {ing.unidade_compra}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex justify-end gap-1">
+                                <button
+                                  type="button"
+                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                                  aria-label={`Editar ${ing.nome}`}
+                                  title="Editar"
+                                  onClick={() => openEditForm(ing)}
+                                >
+                                  <Edit size={16} aria-hidden="true" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded p-1.5 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                                  aria-label={
+                                    ing.ativo
+                                      ? `Desativar ${ing.nome}`
+                                      : `Reativar ${ing.nome}`
+                                  }
+                                  title={ing.ativo ? 'Desativar' : 'Reativar'}
+                                  onClick={() => handleToggleAtivo(ing)}
+                                >
+                                  {ing.ativo ? (
+                                    <XCircle size={16} aria-hidden="true" />
+                                  ) : (
+                                    <RotateCcw size={16} aria-hidden="true" />
+                                  )}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center p-12">
+                <p className="text-sm text-slate-400">
+                  Selecione uma categoria ao lado para ver seus ingredientes.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
