@@ -55,7 +55,10 @@ export function PainelPage() {
         </>
       ) : data ? (
         <>
-          <DashboardStats stats={data.stats} />
+          <DashboardStats
+            stats={data.stats}
+            primeiraFichaIncompletaId={data.pendingRecipes[0]?.id}
+          />
           <DashboardSearch items={data.searchItems} />
           <QuickActions />
 
