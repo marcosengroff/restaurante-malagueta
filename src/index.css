@@ -14,6 +14,22 @@ body {
   min-height: 100vh;
 }
 
+.malaguetta-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.malaguetta-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 4px;
+  height: 24px;
+  border-radius: 0 999px 999px 0;
+  background: #c62828;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #c62828 #151515;

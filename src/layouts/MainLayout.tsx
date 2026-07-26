@@ -77,7 +77,7 @@ export function MainLayout() {
                   `flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium transition ${
                     isActive
                       ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-                      : 'text-white/72 hover:bg-white/8 hover:text-white'
+                      : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
                   }`
                 }
               >
@@ -95,7 +95,7 @@ export function MainLayout() {
                       location.pathname === '/pratos' &&
                       new URLSearchParams(location.search).get('categoria') === aba.id
                         ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-                        : 'text-white/72 hover:bg-white/8 hover:text-white'
+                        : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
                     }`
                   }
                 >
@@ -163,7 +163,7 @@ function SidebarLink({
         `flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition ${
           isActive
             ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-            : 'text-white/70 hover:bg-white/8 hover:text-white'
+            : 'text-white/70 hover:bg-[#C62828]/18 hover:text-white'
         }`
       }
     >

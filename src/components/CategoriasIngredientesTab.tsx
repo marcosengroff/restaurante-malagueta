@@ -201,7 +201,7 @@ export function CategoriasIngredientesTab() {
         </div>
       )}
 
-      <div className="mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 lg:grid-cols-[1fr_180px]">
+      <div className="malaguetta-card mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 lg:grid-cols-[1fr_180px]">
         <label className="block">
           <span className="text-sm font-medium text-slate-700">Pesquisar</span>
           <div className="relative mt-1">
@@ -236,7 +236,7 @@ export function CategoriasIngredientesTab() {
         </label>
       </div>
 
-      <div className="rounded border border-stone-200 bg-white shadow-sm">
+      <div className="malaguetta-card rounded border border-stone-200 bg-white shadow-sm">
         {isLoading ? (
           <div className="p-8 text-center text-sm text-slate-600">
             Carregando categorias...
@@ -326,7 +326,7 @@ export function CategoriasIngredientesTab() {
               {categorias.map((categoria) => (
                 <article
                   key={categoria.id}
-                  className="rounded border border-stone-200 p-4"
+                  className="malaguetta-card rounded border border-stone-200 bg-white p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>

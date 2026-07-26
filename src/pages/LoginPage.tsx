@@ -114,7 +114,7 @@ export function LoginPage() {
       <img
         src={loginBackgroundSrc}
         alt="Restaurante Malaguetta"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="absolute inset-0 h-full w-full object-cover object-[44%_center]"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/18 to-black/5" />
 

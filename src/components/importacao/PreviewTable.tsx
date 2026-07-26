@@ -32,7 +32,7 @@ export function PreviewTable({ title, rows }: PreviewTableProps) {
   )
 
   return (
-    <section className="rounded border border-stone-200 bg-white p-4">
+    <section className="malaguetta-card rounded border border-stone-200 bg-white p-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <h3 className="font-semibold text-slate-950">{title}</h3>
         <div className="flex flex-col gap-2 sm:flex-row">

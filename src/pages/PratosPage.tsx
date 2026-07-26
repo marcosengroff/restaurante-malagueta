@@ -247,7 +247,7 @@ export function PratosPage() {
       )}
 
       {categoriaSelecionada && (
-        <div className="mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 md:grid-cols-[1fr_auto] md:items-end">
+        <div className="malaguetta-card mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 md:grid-cols-[1fr_auto] md:items-end">
           <label className="block">
             <span className="text-sm font-medium text-slate-700">Pesquisar</span>
             <div className="relative mt-1">
@@ -291,7 +291,7 @@ export function PratosPage() {
         />
       ) : (
         <>
-      <div className="mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 lg:grid-cols-[1fr_220px_180px_180px]">
+      <div className="malaguetta-card mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 lg:grid-cols-[1fr_220px_180px_180px]">
         <label className="block">
           <span className="text-sm font-medium text-slate-700">Pesquisar</span>
           <div className="relative mt-1">
@@ -371,7 +371,7 @@ export function PratosPage() {
         </label>
       </div>
 
-      <div className="rounded border border-stone-200 bg-white shadow-sm">
+      <div className="malaguetta-card rounded border border-stone-200 bg-white shadow-sm">
         {isLoading ? (
           <div className="p-8 text-center text-sm text-slate-600">
             Carregando pratos...
@@ -476,7 +476,7 @@ export function PratosPage() {
 
             <div className="grid gap-3 p-3 lg:hidden">
               {pratos.map((prato) => (
-                <article key={prato.id} className="rounded border border-stone-200 p-4">
+                <article key={prato.id} className="malaguetta-card rounded border border-stone-200 bg-white p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <span className="rounded bg-stone-100 px-2 py-1 font-mono text-xs font-semibold text-slate-700">
@@ -629,7 +629,7 @@ function AbaPlanilhaView({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600">
+      <div className="malaguetta-card rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600">
         Carregando pratos da categoria...
       </div>
     )
@@ -643,7 +643,7 @@ function AbaPlanilhaView({
     .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
 
   return (
-    <div className="rounded-lg border border-stone-200 bg-white shadow-sm">
+    <div className="malaguetta-card rounded-lg border border-stone-200 bg-white shadow-sm">
       {rows.length === 0 ? (
         <div className="p-8 text-center">
           <h3 className="text-base font-semibold text-slate-950">
@@ -668,7 +668,7 @@ function AbaPlanilhaView({
               key={prato.id}
               role="link"
               tabIndex={0}
-              className="group flex min-h-20 cursor-pointer items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 outline-none transition hover:border-red-200 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-700/25"
+              className="malaguetta-card group flex min-h-20 cursor-pointer items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 outline-none transition hover:border-red-200 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-700/25"
               aria-label={`Abrir ficha tecnica de ${prato.nome}`}
               onClick={() => onOpen(prato)}
               onKeyDown={(event) => {

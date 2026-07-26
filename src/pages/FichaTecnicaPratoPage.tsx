@@ -136,7 +136,7 @@ export function FichaTecnicaPratoPage() {
 
   if (isLoading) {
     return (
-      <div className="rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600">
+      <div className="malaguetta-card rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600">
         Carregando ficha tecnica...
       </div>
     )
@@ -243,7 +243,7 @@ export function FichaTecnicaPratoPage() {
         </button>
       </div>
 
-      <div className="rounded border border-stone-200 bg-white shadow-sm">
+      <div className="malaguetta-card rounded border border-stone-200 bg-white shadow-sm">
         {itensAPreencher > 0 && (
           <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
             {itensAPreencher} insumo{itensAPreencher === 1 ? '' : 's'} ainda
@@ -333,7 +333,7 @@ export function FichaTecnicaPratoPage() {
 
             <div className="grid gap-3 p-3 lg:hidden">
               {data.itens.map((item) => (
-                <article key={item.id} className="rounded border border-stone-200 p-4">
+                <article key={item.id} className="malaguetta-card rounded border border-stone-200 bg-white p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-slate-950">
@@ -397,7 +397,7 @@ export function FichaTecnicaPratoPage() {
               label="Quantidade de ingredientes"
               value={`${data.itens.length}`}
             />
-            <div className="rounded border border-stone-200 bg-white p-4 text-right">
+            <div className="malaguetta-card rounded border border-stone-200 bg-white p-4 text-right">
               <p className="text-xs font-semibold uppercase text-slate-500">
                 Total da receita
               </p>
@@ -427,7 +427,7 @@ export function FichaTecnicaPratoPage() {
 
 function InfoItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded border border-stone-200 bg-white p-4">
+    <div className="malaguetta-card rounded border border-stone-200 bg-white p-4">
       <dt className="text-xs font-semibold uppercase text-slate-500">{label}</dt>
       <dd className="mt-1 text-sm font-semibold text-slate-950">{value}</dd>
     </div>

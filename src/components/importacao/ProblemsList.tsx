@@ -19,7 +19,7 @@ export function ProblemsList({ problemas }: ProblemsListProps) {
         const items = problemas.filter((problem) => problem.tipo === type)
 
         return (
-          <section key={type} className="rounded border border-stone-200 bg-white p-4">
+          <section key={type} className="malaguetta-card rounded border border-stone-200 bg-white p-4">
             <div className="flex items-center justify-between gap-3">
               <h3 className="font-semibold text-slate-950">{title}</h3>
               <span className="rounded bg-stone-100 px-2 py-1 text-xs font-semibold text-slate-600">

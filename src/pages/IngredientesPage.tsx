@@ -314,11 +314,11 @@ export function IngredientesPage() {
       </div>
 
       {!categorias.length && isLoading ? (
-        <div className="rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
+        <div className="malaguetta-card rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
           Carregando ingredientes...
         </div>
       ) : !categorias.length && ingredientes.length === 0 && !isLoading ? (
-        <div className="rounded border border-stone-200 bg-white p-8 text-center shadow-sm">
+        <div className="malaguetta-card rounded border border-stone-200 bg-white p-8 text-center shadow-sm">
           <h3 className="text-base font-semibold text-slate-950">
             Nenhum ingrediente encontrado
           </h3>
@@ -329,7 +329,7 @@ export function IngredientesPage() {
           </p>
         </div>
       ) : !selectedCategoryId ? (
-        <div className="rounded-lg border border-stone-200 bg-white shadow-sm">
+        <div className="malaguetta-card rounded-lg border border-stone-200 bg-white shadow-sm">
           {isLoading ? (
             <div className="flex items-center justify-center p-8">
               <span className="text-sm text-slate-400">Carregando...</span>
@@ -343,7 +343,7 @@ export function IngredientesPage() {
                   <button
                     key={categoria.id}
                     type="button"
-                    className="group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
+                    className="malaguetta-card group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
                     onClick={() => setSelectedCategoryId(categoria.id)}
                   >
                     <div className="min-w-0">
@@ -366,7 +366,7 @@ export function IngredientesPage() {
               {temIngredientesSemCategoria && (
                 <button
                   type="button"
-                  className="group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
+                  className="malaguetta-card group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
                   onClick={() => setSelectedCategoryId('sem-categoria')}
                 >
                   <div className="min-w-0">
