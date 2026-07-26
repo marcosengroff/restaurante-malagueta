@@ -1,12 +1,11 @@
-import { AlertCircle, Eye, EyeOff, UserPlus } from 'lucide-react'
+import { AlertCircle, ArrowRight, Eye, EyeOff, Lock, Mail, UserPlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { getCurrentSession, signInWithPassword } from '../services/authService'
 
 const logoSrc = '/logo-malaguetta.jpeg'
-const pizzaImageUrl =
-  'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=1600&q=90'
+const loginPanelSrc = '/login-pizza-panel.png'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -47,7 +46,7 @@ export function LoginPage() {
       setError(
         loginError instanceof Error
           ? loginError.message
-          : 'Nao foi possivel entrar no sistema.',
+          : 'Não foi possível entrar no sistema.',
       )
     } finally {
       setIsSubmitting(false)
@@ -67,11 +66,12 @@ export function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F6F7F8] text-[#151515]">
-      <section className="grid min-h-screen lg:grid-cols-[1.05fr_0.95fr]">
+    <main className="min-h-screen overflow-hidden bg-[#0b0b0b] text-white">
+      <section className="grid min-h-screen lg:grid-cols-[46%_54%]">
         <LoginBrandPanel />
 
-        <div className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
+        <div className="relative flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_20%,rgba(198,40,40,0.12),transparent_30%),linear-gradient(120deg,#0b0b0b,#171717_50%,#0d0d0d)]" />
           <LoginCard
             email={email}
             password={password}
@@ -93,39 +93,13 @@ export function LoginPage() {
 
 function LoginBrandPanel() {
   return (
-    <aside
-      className="relative hidden min-h-screen overflow-hidden bg-[#151515] lg:block"
-      aria-label="Restaurante Malaguetta"
-    >
+    <aside className="relative hidden min-h-screen overflow-hidden bg-[#151515] lg:block">
       <img
-        src={pizzaImageUrl}
-        alt="Pizza artesanal recem-saida do forno"
+        src={loginPanelSrc}
+        alt="Pizza artesanal do Restaurante Malaguetta"
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-[#151515]/70" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_25%,rgba(198,40,40,0.42),transparent_28%),radial-gradient(circle_at_78%_78%,rgba(46,125,50,0.34),transparent_30%)]" />
-
-      <div className="relative z-10 flex min-h-screen flex-col justify-between p-10 xl:p-14">
-        <MalaguettaLogo className="h-16 w-auto object-contain" />
-
-        <div className="max-w-xl animate-[fadeIn_0.7s_ease-out]">
-          <div className="mb-6 flex items-center gap-3">
-            <span className="h-1.5 w-12 rounded-full bg-[#C62828]" />
-            <span className="h-1.5 w-8 rounded-full bg-[#2E7D32]" />
-          </div>
-          <h1 className="text-5xl font-semibold tracking-tight text-white xl:text-6xl">
-            Bem-vindo!
-          </h1>
-          <p className="mt-5 max-w-lg text-lg leading-8 text-white/78">
-            Acesse o sistema administrativo e gerencie seu restaurante de forma
-            simples, rapida e eficiente.
-          </p>
-        </div>
-
-        <p className="text-sm font-medium text-white/68">
-          🌶️ Sabor que marca. Qualidade que permanece.
-        </p>
-      </div>
+      <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-r from-transparent to-[#0b0b0b]" />
     </aside>
   )
 }
@@ -156,78 +130,96 @@ function LoginCard({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
 }) {
   return (
-    <section className="w-full max-w-md animate-[fadeIn_0.45s_ease-out] rounded-2xl border border-stone-200 bg-white p-6 shadow-[0_24px_70px_rgba(21,21,21,0.12)] sm:p-8">
-      <div className="mb-8 text-center">
-        <MalaguettaLogo className="mx-auto h-20 w-auto object-contain" />
-        <h1 className="mt-6 text-2xl font-semibold tracking-tight text-[#151515]">
+    <section className="relative z-10 w-full max-w-[650px] animate-[fadeIn_0.45s_ease-out] rounded-2xl border border-[#C62828]/75 bg-[#151515]/82 px-7 py-10 shadow-[0_28px_90px_rgba(0,0,0,0.45)] backdrop-blur-md sm:px-14 sm:py-14">
+      <div className="mb-10 text-center">
+        <img
+          src={logoSrc}
+          alt="Restaurante Malaguetta"
+          className="mx-auto h-24 w-24 rounded-full object-cover shadow-[0_0_0_4px_rgba(255,255,255,0.08)]"
+        />
+        <h1 className="mt-6 text-3xl font-bold tracking-tight text-white">
           Restaurante Malaguetta
         </h1>
-        <p className="mt-1 text-sm font-medium text-slate-500">
-          Acesso ao sistema
-        </p>
+        <div className="mt-4 flex items-center justify-center gap-7">
+          <span className="h-px w-16 bg-[#2E7D32]" />
+          <p className="text-xl text-white/70">Acesso ao sistema</p>
+          <span className="h-px w-16 bg-[#C62828]" />
+        </div>
       </div>
 
       {error && (
-        <div className="mb-5 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-900">
+        <div className="mb-6 flex items-start gap-2 rounded-xl border border-[#C62828]/45 bg-[#C62828]/10 p-3 text-sm text-red-100">
           <AlertCircle size={18} aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      <form className="space-y-5" onSubmit={onSubmit}>
+      <form className="space-y-7" onSubmit={onSubmit}>
         <label className="block">
-          <span className="text-sm font-semibold text-slate-700">Email</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => onEmailChange(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-stone-300 bg-[#F6F7F8] px-4 py-3 text-[#151515] outline-none transition placeholder:text-slate-400 focus:border-[#C62828] focus:bg-white focus:ring-4 focus:ring-[#C62828]/10"
-            placeholder="usuario@malaguetta.com"
-            autoComplete="email"
-            required
-          />
+          <span className="text-sm font-bold text-white">E-mail</span>
+          <div className="relative mt-3">
+            <Mail
+              className="absolute left-5 top-1/2 -translate-y-1/2 text-white/70"
+              size={24}
+              aria-hidden="true"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => onEmailChange(event.target.value)}
+              className="h-16 w-full rounded-lg border border-white/18 bg-[#111]/65 px-16 text-lg text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
+              placeholder="Digite seu e-mail"
+              autoComplete="email"
+              required
+            />
+          </div>
         </label>
 
         <label className="block">
-          <span className="text-sm font-semibold text-slate-700">Senha</span>
-          <div className="relative mt-2">
+          <span className="text-sm font-bold text-white">Senha</span>
+          <div className="relative mt-3">
+            <Lock
+              className="absolute left-5 top-1/2 -translate-y-1/2 text-white/70"
+              size={24}
+              aria-hidden="true"
+            />
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
-              className="w-full rounded-xl border border-stone-300 bg-[#F6F7F8] px-4 py-3 pr-12 text-[#151515] outline-none transition placeholder:text-slate-400 focus:border-[#C62828] focus:bg-white focus:ring-4 focus:ring-[#C62828]/10"
+              className="h-16 w-full rounded-lg border border-white/18 bg-[#111]/65 px-16 pr-16 text-lg text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
               placeholder="Digite sua senha"
               autoComplete="current-password"
               required
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-500 transition hover:bg-stone-200 hover:text-[#151515] focus:outline-none focus:ring-2 focus:ring-[#C62828]/25"
+              className="absolute right-5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/70 transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#C62828]/30"
               aria-label={showPassword ? 'Ocultar senha' : 'Visualizar senha'}
               onClick={onTogglePassword}
             >
               {showPassword ? (
-                <EyeOff size={18} aria-hidden="true" />
+                <EyeOff size={22} aria-hidden="true" />
               ) : (
-                <Eye size={18} aria-hidden="true" />
+                <Eye size={22} aria-hidden="true" />
               )}
             </button>
           </div>
         </label>
 
-        <div className="flex items-center justify-between gap-4 text-sm">
-          <label className="flex items-center gap-2 font-medium text-slate-600">
+        <div className="flex items-center justify-between gap-4 text-base">
+          <label className="flex items-center gap-3 text-white/75">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(event) => onRememberMeChange(event.target.checked)}
-              className="h-4 w-4 rounded border-stone-300 accent-[#C62828]"
+              className="h-5 w-5 rounded accent-[#C62828]"
             />
             Lembrar de mim
           </label>
           <button
             type="button"
-            className="font-semibold text-[#C62828] transition hover:text-[#9f1f1f]"
+            className="font-medium text-[#ff3838] transition hover:text-white"
           >
             Esqueci minha senha
           </button>
@@ -235,37 +227,27 @@ function LoginCard({
 
         <button
           type="submit"
-          className="w-full rounded-xl bg-[#C62828] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#C62828]/20 transition duration-200 hover:-translate-y-0.5 hover:bg-[#b71f1f] hover:shadow-xl hover:shadow-[#C62828]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
+          className="flex h-16 w-full items-center justify-center gap-4 rounded-lg bg-[#C62828] px-5 text-lg font-bold text-white shadow-[0_18px_38px_rgba(198,40,40,0.25)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#d11f1f] hover:shadow-[0_22px_50px_rgba(198,40,40,0.35)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Entrando...' : 'Entrar'}
+          {!isSubmitting && <ArrowRight size={25} aria-hidden="true" />}
         </button>
       </form>
 
-      <div className="mt-7 border-t border-stone-200 pt-6 text-center">
-        <p className="text-sm text-slate-500">Ainda nao possui uma conta?</p>
-        <button
-          type="button"
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#C62828] bg-transparent px-4 py-3 text-sm font-semibold text-[#C62828] transition hover:bg-[#C62828]/8 hover:shadow-sm focus:outline-none focus:ring-4 focus:ring-[#C62828]/10"
-        >
-          <UserPlus size={17} aria-hidden="true" />
-          Criar conta
-        </button>
+      <div className="mt-12 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <span className="h-px bg-white/10" />
+        <p className="text-sm text-white/45">Ainda não tem uma conta?</p>
+        <span className="h-px bg-white/10" />
       </div>
 
-      <p className="mt-8 text-center text-xs font-medium text-slate-400">
-        🌶️ Sabor que marca. Qualidade que permanece.
-      </p>
+      <button
+        type="button"
+        className="mt-6 inline-flex h-16 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-lg font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15"
+      >
+        <UserPlus size={28} className="text-[#ff3838]" aria-hidden="true" />
+        Criar conta
+      </button>
     </section>
-  )
-}
-
-function MalaguettaLogo({ className }: { className?: string }) {
-  return (
-    <img
-      src={logoSrc}
-      alt="Restaurante Malaguetta"
-      className={className}
-    />
   )
 }
