@@ -679,7 +679,7 @@ function AbaPlanilhaView({
               }}
             >
               <div className="min-w-0">
-                <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-950 group-hover:text-red-800">
+                <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950 group-hover:text-red-800">
                   {prato.nome}
                 </h3>
                 <p className="mt-1 text-xs text-slate-500">

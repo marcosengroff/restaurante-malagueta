@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type {
   CategoriaIngrediente,
@@ -9,6 +9,7 @@ import type {
 } from '../types/ingrediente'
 import { getUnidadeBase, unidadesCompra } from '../utils/ingredientes'
 import { ingredienteSchema } from '../utils/ingredienteValidation'
+import { formatCurrencyInput, parseCurrencyInput } from '../utils/formatters'
 
 type IngredienteFormProps = {
   categorias: CategoriaIngrediente[]
@@ -42,6 +43,7 @@ export function IngredienteForm({
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<IngredienteFormValues>({
     resolver: zodResolver(ingredienteSchema),
@@ -49,6 +51,7 @@ export function IngredienteForm({
   })
 
   const unidadeCompra = watch('unidade_compra')
+  const [precoDisplay, setPrecoDisplay] = useState(formatCurrencyInput(0))
 
   useEffect(() => {
     if (ingrediente) {
@@ -61,6 +64,7 @@ export function IngredienteForm({
         observacoes: ingrediente.observacoes ?? '',
         ativo: ingrediente.ativo,
       })
+      setPrecoDisplay(formatCurrencyInput(ingrediente.preco_embalagem))
       return
     }
 
@@ -68,7 +72,24 @@ export function IngredienteForm({
       ...defaultValues,
       categoria_id: initialCategoriaId,
     })
+    setPrecoDisplay(formatCurrencyInput(defaultValues.preco_embalagem))
   }, [ingrediente, initialCategoriaId, reset])
+
+  function handlePrecoChange(value: string) {
+    const nextValue = parseCurrencyInput(value)
+    setPrecoDisplay(formatCurrencyInput(nextValue))
+    setValue('preco_embalagem', nextValue, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }
+
+  async function handleValidSubmit(values: IngredienteFormValues) {
+    await onSubmit({
+      ...values,
+      observacoes: '',
+    })
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/40 p-0 sm:items-center sm:p-4">
@@ -99,7 +120,10 @@ export function IngredienteForm({
           </div>
         )}
 
-        <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="grid gap-4 sm:grid-cols-2"
+          onSubmit={handleSubmit(handleValidSubmit)}
+        >
           <label className="block sm:col-span-2">
             <span className="text-sm font-medium text-slate-700">Nome</span>
             <input
@@ -164,15 +188,13 @@ export function IngredienteForm({
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">
-              Preco da embalagem
-            </span>
+            <span className="text-sm font-medium text-slate-700">Preço</span>
             <input
-              type="number"
-              min="0"
-              step="0.01"
+              type="text"
+              inputMode="numeric"
               className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-              {...register('preco_embalagem', { valueAsNumber: true })}
+              value={precoDisplay}
+              onChange={(event) => handlePrecoChange(event.target.value)}
             />
             {errors.preco_embalagem && (
               <span className="mt-1 block text-xs text-red-700">
@@ -193,15 +215,6 @@ export function IngredienteForm({
               {...register('ativo')}
             />
             Ingrediente ativo
-          </label>
-
-          <label className="block sm:col-span-2">
-            <span className="text-sm font-medium text-slate-700">Observacoes</span>
-            <textarea
-              rows={3}
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-              {...register('observacoes')}
-            />
           </label>
 
           <div className="flex flex-col-reverse gap-2 sm:col-span-2 sm:flex-row sm:justify-end">

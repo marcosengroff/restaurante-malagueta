@@ -66,6 +66,13 @@ export function FichaTecnicaItemForm({
     reset(defaultValues)
   }, [item, reset])
 
+  async function handleValidSubmit(values: FichaTecnicaFormValues) {
+    await onSubmit({
+      ...values,
+      observacao: '',
+    })
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/40 p-0 sm:items-center sm:p-4">
       <section className="max-h-[92vh] w-full overflow-y-auto rounded-t border border-stone-200 bg-white p-5 shadow-xl sm:mx-auto sm:max-w-xl sm:rounded">
@@ -88,7 +95,7 @@ export function FichaTecnicaItemForm({
           </button>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <form className="space-y-4" onSubmit={handleSubmit(handleValidSubmit)}>
           <label className="block">
             <span className="text-sm font-medium text-slate-700">Ingrediente</span>
             <select
@@ -147,15 +154,6 @@ export function FichaTecnicaItemForm({
               </p>
             </div>
           </div>
-
-          <label className="block">
-            <span className="text-sm font-medium text-slate-700">Observacao</span>
-            <textarea
-              rows={3}
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-              {...register('observacao')}
-            />
-          </label>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <button

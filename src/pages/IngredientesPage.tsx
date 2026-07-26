@@ -347,7 +347,7 @@ export function IngredientesPage() {
                     onClick={() => setSelectedCategoryId(categoria.id)}
                   >
                     <div className="min-w-0">
-                      <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-950">
+                      <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
                         {categoria.nome}
                       </h3>
                       <p className="mt-1 text-xs text-slate-500">
@@ -370,7 +370,7 @@ export function IngredientesPage() {
                   onClick={() => setSelectedCategoryId('sem-categoria')}
                 >
                   <div className="min-w-0">
-                    <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-500">
+                    <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-500">
                       Sem categoria
                     </h3>
                     <p className="mt-1 text-xs text-slate-500">
@@ -460,7 +460,7 @@ export function IngredientesPage() {
                             Un.
                           </th>
                           <th className="w-1/4 px-4 py-3 font-semibold">
-                            Preco
+                            Preço
                           </th>
                           <th className="px-4 py-3 text-right font-semibold">
                             Acoes
@@ -574,7 +574,7 @@ export function IngredientesPage() {
                           Ingrediente
                         </th>
                         <th className="w-1/4 px-4 py-3 font-semibold">Un.</th>
-                        <th className="w-1/4 px-4 py-3 font-semibold">Preco</th>
+                        <th className="w-1/4 px-4 py-3 font-semibold">Preço</th>
                         <th className="px-4 py-3 text-right font-semibold">Acoes</th>
                       </tr>
                     </thead>

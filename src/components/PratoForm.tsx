@@ -67,6 +67,7 @@ export function PratoForm({
       tempo_preparo: Number.isNaN(values.tempo_preparo)
         ? null
         : values.tempo_preparo,
+      observacoes: '',
     })
   }
 
@@ -208,15 +209,6 @@ export function PratoForm({
               rows={3}
               className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
               {...register('descricao')}
-            />
-          </label>
-
-          <label className="block sm:col-span-2">
-            <span className="text-sm font-medium text-slate-700">Observacoes</span>
-            <textarea
-              rows={3}
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-              {...register('observacoes')}
             />
           </label>
 

@@ -199,7 +199,6 @@ export function FichaTecnicaPratoPage() {
             label="Tempo"
             value={prato.tempo_preparo ? `${prato.tempo_preparo} min` : '-'}
           />
-          <InfoItem label="Observacoes" value={prato.observacoes ?? '-'} />
         </dl>
       </div>
 
@@ -272,7 +271,6 @@ export function FichaTecnicaPratoPage() {
                     <th className="px-4 py-3 font-semibold">Quantidade</th>
                     <th className="px-4 py-3 font-semibold">Custo unitario</th>
                     <th className="px-4 py-3 font-semibold">Custo total</th>
-                    <th className="px-4 py-3 font-semibold">Observacao</th>
                     <th className="px-4 py-3 text-right font-semibold">Acoes</th>
                   </tr>
                 </thead>
@@ -296,9 +294,6 @@ export function FichaTecnicaPratoPage() {
                       </td>
                       <td className="px-4 py-3 font-semibold text-slate-950">
                         {formatCurrency(item.custo_total)}
-                      </td>
-                      <td className="px-4 py-3 text-slate-600">
-                        {item.observacao ?? '-'}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
@@ -362,7 +357,6 @@ export function FichaTecnicaPratoPage() {
                         item.unidade_base
                       }`}
                     />
-                    <InfoItem label="Observacao" value={item.observacao ?? '-'} />
                   </dl>
                   <div className="mt-4 flex gap-2">
                     <button
