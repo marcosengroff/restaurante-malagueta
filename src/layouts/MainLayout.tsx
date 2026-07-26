@@ -33,7 +33,7 @@ export function MainLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 text-slate-900">
+    <div className="min-h-screen bg-[#eef0f3] text-slate-900">
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-72 overflow-hidden bg-[#111413] px-4 py-6 text-white shadow-2xl transition-transform duration-200 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'

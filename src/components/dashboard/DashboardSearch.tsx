@@ -18,7 +18,8 @@ export function DashboardSearch({ items }: { items: DashboardSearchItem[] }) {
   }, [items, query])
 
   return (
-    <div className="relative rounded-xl border border-stone-100 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
+    <div className="relative overflow-hidden rounded-xl border border-stone-100 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
+      <span className="absolute left-0 top-4 h-6 w-1 rounded-r-full bg-[#C62828]" />
       <div className="flex gap-3">
         <div className="relative flex-1">
           <Search

@@ -15,6 +15,7 @@ type StatItem = {
   value: string
   icon: typeof Utensils
   tone: string
+  accent: string
   to?: string
 }
 
@@ -31,6 +32,7 @@ export function DashboardStats({
       value: String(stats.totalPratos),
       icon: Utensils,
       tone: 'bg-[#eef1e5] text-[#55613d]',
+      accent: 'bg-[#C62828]',
       to: '/pratos',
     },
     {
@@ -38,6 +40,7 @@ export function DashboardStats({
       value: String(stats.totalIngredientes),
       icon: Salad,
       tone: 'bg-stone-100 text-slate-600',
+      accent: 'bg-[#C62828]',
       to: '/ingredientes',
     },
     {
@@ -45,6 +48,7 @@ export function DashboardStats({
       value: String(stats.fichasCompletas),
       icon: ClipboardCheck,
       tone: 'bg-emerald-50 text-emerald-700',
+      accent: 'bg-[#2E7D32]',
     },
     ...(stats.fichasIncompletas > 0
       ? [
@@ -53,6 +57,7 @@ export function DashboardStats({
             value: String(stats.fichasIncompletas),
             icon: AlertTriangle,
             tone: 'bg-orange-50 text-orange-700',
+            accent: 'bg-orange-500',
             to: primeiraFichaIncompletaId
               ? `/pratos/${primeiraFichaIncompletaId}/ficha-tecnica`
               : undefined,
@@ -64,6 +69,7 @@ export function DashboardStats({
       value: formatCurrency(stats.custoMedioPratos),
       icon: DollarSign,
       tone: 'bg-[#eef1e5] text-[#55613d]',
+      accent: 'bg-[#2E7D32]',
     },
     {
       label: 'Ultima atualizacao',
@@ -77,6 +83,7 @@ export function DashboardStats({
         : '-',
       icon: CalendarClock,
       tone: 'bg-stone-100 text-slate-600',
+      accent: 'bg-blue-600',
     },
   ]
 
@@ -86,6 +93,7 @@ export function DashboardStats({
         const Icon = item.icon
         const content = (
           <>
+            <span className={`absolute left-0 top-4 h-6 w-1 rounded-r-full ${item.accent}`} />
             <div className="flex items-start justify-between gap-3">
               <p className="text-xs font-semibold uppercase text-slate-500">
                 {item.label}
@@ -105,7 +113,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
+              className="relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
             >
               {content}
             </Link>
@@ -115,7 +123,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
+            className="relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
           >
             {content}
           </div>
