@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  CategoriesCard,
-  ExpensiveRecipesCard,
-  PendingRecipesCard,
-  RecentUpdatesCard,
-} from '../components/dashboard/DashboardCards'
 import { DashboardFooter } from '../components/dashboard/DashboardFooter'
 import { DashboardHeader } from '../components/dashboard/DashboardHeader'
 import { DashboardSearch } from '../components/dashboard/DashboardSearch'
@@ -77,19 +71,7 @@ export function PainelPage() {
                 Cadastrar primeiro prato
               </Link>
             </div>
-          ) : (
-            <>
-              <div className="grid gap-6 xl:grid-cols-2">
-                <PendingRecipesCard recipes={data.pendingRecipes} />
-                <ExpensiveRecipesCard recipes={data.expensiveRecipes} />
-              </div>
-
-              <div className="grid gap-6 xl:grid-cols-2">
-                <CategoriesCard categories={data.categories} />
-                <RecentUpdatesCard updates={data.recentUpdates} />
-              </div>
-            </>
-          )}
+          ) : null}
 
           <DashboardFooter data={data.footer} />
         </>

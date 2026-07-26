@@ -14,6 +14,30 @@ body {
   min-height: 100vh;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c62828 #151515;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #151515;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c62828;
+  border: 2px solid #151515;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #d11f1f;
+}
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;

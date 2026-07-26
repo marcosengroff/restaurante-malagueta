@@ -26,7 +26,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {actions.map((action) => {
         const Icon = action.icon
 
@@ -34,12 +34,13 @@ export function QuickActions() {
           <Link
             key={action.label}
             to={action.to}
-            className="flex items-center gap-3 rounded-lg border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-[#69704f]/40 hover:bg-[#f7f8f2]"
+            className="relative flex min-h-24 items-center gap-4 overflow-hidden rounded-xl border border-stone-100 bg-white px-5 py-4 text-sm font-semibold text-slate-800 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/35"
           >
-            <span className="rounded bg-[#eef1e5] p-2 text-[#55613d]">
-              <Icon size={17} aria-hidden="true" />
+            <span className="absolute inset-x-0 bottom-0 h-1 bg-[#C62828]" />
+            <span className="rounded-full bg-red-50 p-4 text-[#C62828]">
+              <Icon size={22} aria-hidden="true" />
             </span>
-            {action.label}
+            <span>{action.label}</span>
           </Link>
         )
       })}

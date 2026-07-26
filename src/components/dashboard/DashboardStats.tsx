@@ -81,7 +81,7 @@ export function DashboardStats({
   ]
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {items.map((item) => {
         const Icon = item.icon
         const content = (
@@ -105,7 +105,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="rounded-lg border border-stone-200 bg-white p-4 shadow-sm transition hover:border-red-200 hover:bg-red-50/40"
+              className="rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
             >
               {content}
             </Link>
@@ -115,7 +115,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="rounded-lg border border-stone-200 bg-white p-4 shadow-sm"
+            className="rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
           >
             {content}
           </div>
@@ -127,7 +127,7 @@ export function DashboardStats({
 
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}

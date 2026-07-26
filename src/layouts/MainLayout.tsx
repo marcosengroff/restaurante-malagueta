@@ -68,10 +68,8 @@ export function MainLayout() {
 
         <nav className="relative z-10 mt-9 flex h-[calc(100vh-155px)] flex-col">
           <div className="min-h-0 flex-1">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[#ff3838]">
-              Planilha Malaguetta
-            </p>
-            <div className="mt-2 max-h-full space-y-1 overflow-y-auto pr-1">
+            <div className="max-h-full space-y-1 overflow-y-auto pr-1">
+              <SidebarLink to="/painel" icon={Gauge} label="Painel" onClick={() => setIsSidebarOpen(false)} />
               <NavLink
                 to="/ingredientes"
                 onClick={() => setIsSidebarOpen(false)}
@@ -105,15 +103,6 @@ export function MainLayout() {
                   <span className="truncate">{aba.nome}</span>
                 </NavLink>
               ))}
-            </div>
-          </div>
-
-          <div className="mt-5 border-t border-white/10 pt-4">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[#ff3838]">
-              Sistema
-            </p>
-            <div className="mt-2 space-y-1">
-              <SidebarLink to="/painel" icon={Gauge} label="Painel" onClick={() => setIsSidebarOpen(false)} />
             </div>
           </div>
 

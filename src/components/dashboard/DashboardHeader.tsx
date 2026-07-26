@@ -16,10 +16,7 @@ export function DashboardHeader() {
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-wide text-[#69704f]">
-          Centro de controle
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold text-slate-950">
+        <h1 className="text-3xl font-semibold text-slate-950">
           {getGreeting()}, Marcos
         </h1>
         <p className="mt-2 text-sm text-slate-600">

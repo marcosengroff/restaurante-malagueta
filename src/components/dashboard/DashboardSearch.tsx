@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react'
+import { SlidersHorizontal, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { DashboardSearchItem } from '../../types/dashboard'
@@ -18,20 +18,29 @@ export function DashboardSearch({ items }: { items: DashboardSearchItem[] }) {
   }, [items, query])
 
   return (
-    <div className="relative rounded-lg border border-stone-200 bg-white p-3 shadow-sm">
-      <div className="relative">
-        <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-          size={20}
-          aria-hidden="true"
-        />
-        <input
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          className="h-12 w-full rounded border border-stone-200 bg-stone-50 pl-12 pr-4 text-slate-950 outline-none focus:border-[#69704f] focus:ring-2 focus:ring-[#69704f]/15"
-          placeholder="Pesquisar prato, ingrediente ou categoria..."
-        />
+    <div className="relative rounded-xl border border-stone-100 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.08)]">
+      <div className="flex gap-3">
+        <div className="relative flex-1">
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            size={20}
+            aria-hidden="true"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            className="h-14 w-full rounded-lg border border-stone-200 bg-white pl-12 pr-4 text-slate-950 outline-none focus:border-[#C62828] focus:ring-2 focus:ring-[#C62828]/15"
+            placeholder="Pesquisar prato, ingrediente ou categoria..."
+          />
+        </div>
+        <button
+          type="button"
+          className="flex h-14 w-14 items-center justify-center rounded-lg border border-stone-200 bg-white text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-[#C62828]"
+          aria-label="Filtros"
+        >
+          <SlidersHorizontal size={20} aria-hidden="true" />
+        </button>
       </div>
 
       {results.length > 0 && (
