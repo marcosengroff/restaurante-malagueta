@@ -70,7 +70,7 @@ export function LoginPage() {
       <section className="grid h-screen lg:grid-cols-[46%_54%]">
         <LoginBrandPanel />
 
-        <div className="relative flex h-screen items-center justify-center px-5 py-6 sm:px-8">
+        <div className="relative flex h-screen items-center justify-center px-5 py-3 sm:px-8">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_20%,rgba(198,40,40,0.12),transparent_30%),linear-gradient(120deg,#0b0b0b,#171717_50%,#0d0d0d)]" />
           <LoginCard
             email={email}
@@ -130,34 +130,34 @@ function LoginCard({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
 }) {
   return (
-    <section className="relative z-10 w-full max-w-[620px] animate-[fadeIn_0.45s_ease-out] rounded-2xl border border-[#C62828]/75 bg-[#151515]/82 px-7 py-8 shadow-[0_28px_90px_rgba(0,0,0,0.45)] backdrop-blur-md sm:px-12 sm:py-10">
-      <div className="mb-7 text-center">
+    <section className="relative z-10 max-h-[calc(100vh-24px)] w-full max-w-[620px] animate-[fadeIn_0.45s_ease-out] overflow-hidden rounded-2xl border border-[#C62828]/75 bg-[#151515]/82 px-7 py-6 shadow-[0_28px_90px_rgba(0,0,0,0.45)] backdrop-blur-md sm:px-12 sm:py-7">
+      <div className="mb-5 text-center">
         <img
           src={pepperLogoSrc}
           alt="Pimenta Malaguetta"
-          className="mx-auto h-16 w-auto object-contain"
+          className="mx-auto h-12 w-auto max-w-44 object-contain"
         />
-        <h1 className="mt-5 text-3xl font-bold tracking-tight text-white">
+        <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Restaurante Malaguetta
         </h1>
-        <div className="mt-4 flex items-center justify-center gap-7">
-          <span className="h-px w-16 bg-[#2E7D32]" />
-          <p className="text-xl text-white/70">Acesso ao sistema</p>
-          <span className="h-px w-16 bg-[#C62828]" />
+        <div className="mt-3 flex items-center justify-center gap-5">
+          <span className="h-px w-14 bg-[#2E7D32]" />
+          <p className="text-base text-white/70 sm:text-lg">Acesso ao sistema</p>
+          <span className="h-px w-14 bg-[#C62828]" />
         </div>
       </div>
 
       {error && (
-        <div className="mb-6 flex items-start gap-2 rounded-xl border border-[#C62828]/45 bg-[#C62828]/10 p-3 text-sm text-red-100">
+        <div className="mb-4 flex items-start gap-2 rounded-xl border border-[#C62828]/45 bg-[#C62828]/10 p-3 text-sm text-red-100">
           <AlertCircle size={18} aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      <form className="space-y-5" onSubmit={onSubmit}>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <label className="block">
           <span className="text-sm font-bold text-white">E-mail</span>
-          <div className="relative mt-3">
+          <div className="relative mt-2">
             <Mail
               className="absolute left-5 top-1/2 -translate-y-1/2 text-white/70"
               size={24}
@@ -167,7 +167,7 @@ function LoginCard({
               type="email"
               value={email}
               onChange={(event) => onEmailChange(event.target.value)}
-              className="h-14 w-full rounded-lg border border-white/18 bg-[#111]/65 px-14 text-base text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
+              className="h-12 w-full rounded-lg border border-white/18 bg-[#111]/65 px-14 text-base text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
               placeholder="Digite seu e-mail"
               autoComplete="email"
               required
@@ -177,7 +177,7 @@ function LoginCard({
 
         <label className="block">
           <span className="text-sm font-bold text-white">Senha</span>
-          <div className="relative mt-3">
+          <div className="relative mt-2">
             <Lock
               className="absolute left-5 top-1/2 -translate-y-1/2 text-white/70"
               size={24}
@@ -187,7 +187,7 @@ function LoginCard({
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
-              className="h-14 w-full rounded-lg border border-white/18 bg-[#111]/65 px-14 pr-16 text-base text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
+              className="h-12 w-full rounded-lg border border-white/18 bg-[#111]/65 px-14 pr-16 text-base text-white outline-none transition placeholder:text-white/38 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
               placeholder="Digite sua senha"
               autoComplete="current-password"
               required
@@ -227,7 +227,7 @@ function LoginCard({
 
         <button
           type="submit"
-          className="flex h-14 w-full items-center justify-center gap-4 rounded-lg bg-[#C62828] px-5 text-base font-bold text-white shadow-[0_18px_38px_rgba(198,40,40,0.25)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#d11f1f] hover:shadow-[0_22px_50px_rgba(198,40,40,0.35)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
+          className="flex h-12 w-full items-center justify-center gap-4 rounded-lg bg-[#C62828] px-5 text-base font-bold text-white shadow-[0_18px_38px_rgba(198,40,40,0.25)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#d11f1f] hover:shadow-[0_22px_50px_rgba(198,40,40,0.35)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Entrando...' : 'Entrar'}
@@ -235,7 +235,7 @@ function LoginCard({
         </button>
       </form>
 
-      <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
         <span className="h-px bg-white/10" />
         <p className="text-sm text-white/45">Ainda não tem uma conta?</p>
         <span className="h-px bg-white/10" />
@@ -243,7 +243,7 @@ function LoginCard({
 
       <button
         type="button"
-        className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15"
+        className="mt-4 inline-flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15"
       >
         <UserPlus size={28} className="text-[#ff3838]" aria-hidden="true" />
         Criar conta
