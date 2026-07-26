@@ -134,20 +134,16 @@ export function MainLayout() {
       )}
 
       <div className="min-h-screen lg:pl-72">
-        <header className="sticky top-0 z-20 border-b border-stone-200 bg-stone-50/95 backdrop-blur lg:hidden">
-          <div className="flex items-center px-4 py-3">
-            <button
-              type="button"
-              className="rounded border border-stone-200 bg-white p-2 text-slate-700 shadow-sm"
-              aria-label="Abrir menu"
-              onClick={() => setIsSidebarOpen(true)}
-            >
-              <Menu size={22} aria-hidden="true" />
-            </button>
-          </div>
-        </header>
+        <button
+          type="button"
+          className="fixed left-4 top-4 z-20 rounded border border-stone-200 bg-white p-2 text-slate-700 shadow-sm lg:hidden"
+          aria-label="Abrir menu"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          <Menu size={22} aria-hidden="true" />
+        </button>
 
-        <main className="px-4 py-6 lg:px-8">
+        <main className="px-4 py-6 pt-16 lg:px-8 lg:pt-6">
           <Outlet />
         </main>
       </div>

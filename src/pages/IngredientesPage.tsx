@@ -157,10 +157,8 @@ export function IngredientesPage() {
     loadIngredientes()
   }, [loadIngredientes])
 
-  function openCreateForm(categoriaId?: string) {
+  function openCreateForm() {
     setEditingIngrediente(null)
-    // We'll use a workaround: set a temp value to pre-select category
-    // The form will be opened and user can select
     setIsFormOpen(true)
   }
 
@@ -318,11 +316,11 @@ export function IngredientesPage() {
         </label>
       </div>
 
-      {isLoading ? (
+      {!categorias.length && isLoading ? (
         <div className="rounded border border-stone-200 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
           Carregando ingredientes...
         </div>
-      ) : ingredientes.length === 0 ? (
+      ) : !categorias.length && ingredientes.length === 0 && !isLoading ? (
         <div className="rounded border border-stone-200 bg-white p-8 text-center shadow-sm">
           <h3 className="text-base font-semibold text-slate-950">
             Nenhum ingrediente encontrado
@@ -338,89 +336,107 @@ export function IngredientesPage() {
           {/* Sidebar - Category List */}
           <aside className="w-full border-b border-stone-200 lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
             <div className="max-h-[calc(100vh-390px)] overflow-y-auto">
-              <div className="space-y-0.5 px-2 py-3">
-                {categoriasVisiveis.map((categoria) => {
-                  const ings = ingredientesPorCategoria.get(categoria.id) ?? []
-                  const isSelected = selectedCategoryId === categoria.id
+              {isLoading ? (
+                <div className="flex items-center justify-center p-6">
+                  <span className="text-sm text-slate-400">Carregando...</span>
+                </div>
+              ) : (
+                <div className="space-y-0.5 px-2 py-3">
+                  {categoriasVisiveis.map((categoria) => {
+                    const ings = ingredientesPorCategoria.get(categoria.id) ?? []
+                    const isSelected = selectedCategoryId === categoria.id
 
-                  return (
+                    return (
+                      <button
+                        key={categoria.id}
+                        type="button"
+                        className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
+                          isSelected
+                            ? 'bg-red-700 text-white'
+                            : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
+                        }`}
+                        onClick={() => setSelectedCategoryId(categoria.id)}
+                      >
+                        <div className="flex min-w-0 items-center gap-2">
+                          <ChevronRight
+                            size={14}
+                            className={`shrink-0 transition-transform ${
+                              isSelected ? 'text-white' : 'text-slate-400'
+                            }`}
+                            aria-hidden="true"
+                          />
+                          <span className="truncate font-medium">
+                            {categoria.nome}
+                          </span>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
+                            isSelected
+                              ? 'bg-red-600 text-white'
+                              : 'bg-stone-100 text-slate-500'
+                          }`}
+                        >
+                          {ings.length}
+                        </span>
+                      </button>
+                    )
+                  })}
+
+                  {temIngredientesSemCategoria && (
                     <button
-                      key={categoria.id}
                       type="button"
                       className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
-                        isSelected
+                        selectedCategoryId === 'sem-categoria'
                           ? 'bg-red-700 text-white'
-                          : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
+                          : 'text-slate-500 hover:bg-stone-100 hover:text-slate-950'
                       }`}
-                      onClick={() => setSelectedCategoryId(categoria.id)}
+                      onClick={() => setSelectedCategoryId('sem-categoria')}
                     >
                       <div className="flex min-w-0 items-center gap-2">
                         <ChevronRight
                           size={14}
                           className={`shrink-0 transition-transform ${
-                            isSelected ? 'text-white' : 'text-slate-400'
+                            selectedCategoryId === 'sem-categoria'
+                              ? 'text-white'
+                              : 'text-slate-400'
                           }`}
                           aria-hidden="true"
                         />
                         <span className="truncate font-medium">
-                          {categoria.nome}
+                          Sem categoria
                         </span>
                       </div>
                       <span
                         className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
-                          isSelected
+                          selectedCategoryId === 'sem-categoria'
                             ? 'bg-red-600 text-white'
                             : 'bg-stone-100 text-slate-500'
                         }`}
                       >
-                        {ings.length}
+                        {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}
                       </span>
                     </button>
-                  )
-                })}
+                  )}
 
-                {temIngredientesSemCategoria && (
-                  <button
-                    type="button"
-                    className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
-                      selectedCategoryId === 'sem-categoria'
-                        ? 'bg-red-700 text-white'
-                        : 'text-slate-500 hover:bg-stone-100 hover:text-slate-950'
-                    }`}
-                    onClick={() => setSelectedCategoryId('sem-categoria')}
-                  >
-                    <div className="flex min-w-0 items-center gap-2">
-                      <ChevronRight
-                        size={14}
-                        className={`shrink-0 transition-transform ${
-                          selectedCategoryId === 'sem-categoria'
-                            ? 'text-white'
-                            : 'text-slate-400'
-                        }`}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate font-medium">
-                        Sem categoria
-                      </span>
+                  {categoriasVisiveis.length === 0 && !temIngredientesSemCategoria && (
+                    <div className="px-3 py-6 text-center text-sm text-slate-400">
+                      {search.trim()
+                        ? 'Nenhuma categoria encontrada para esta busca.'
+                        : 'Nenhuma categoria cadastrada.'}
                     </div>
-                    <span
-                      className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
-                        selectedCategoryId === 'sem-categoria'
-                          ? 'bg-red-600 text-white'
-                          : 'bg-stone-100 text-slate-500'
-                      }`}
-                    >
-                      {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}
-                    </span>
-                  </button>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
           </aside>
 
           {/* Main Content - Ingredient Table */}
           <div className="min-w-0 flex-1">
-            {selectedCategory ? (
+            {isLoading ? (
+              <div className="flex items-center justify-center p-8">
+                <span className="text-sm text-slate-400">Carregando...</span>
+              </div>
+            ) : selectedCategory ? (
               <>
                 <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
                   <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
