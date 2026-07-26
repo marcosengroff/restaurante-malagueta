@@ -1,5 +1,6 @@
 import {
   CheckCircle2,
+  ChevronRight,
   ClipboardList,
   Edit,
   Plus,
@@ -11,8 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { PratoForm } from '../components/PratoForm'
 import { PageHeader } from '../components/PageHeader'
-import { RecipeList } from '../components/recipes/RecipeList'
-import type { RecipeStatus } from '../components/recipes/RecipeStatusBadge'
+import { RecipeActionsMenu } from '../components/recipes/RecipeActionsMenu'
 import {
   listCategoriasPratosAtivas,
   listPratosAbaPlanilha,
@@ -26,8 +26,6 @@ import type { Prato, PratoAbaPlanilha, PratoFormValues, PratoSort } from '../typ
 import { formatDate, formatNumber } from '../utils/formatters'
 
 const pageSize = 10
-type RecipeStatusFilter = 'todos' | RecipeStatus
-type RecipeSort = 'nome' | 'custo' | 'pendencias'
 
 export function PratosPage() {
   const navigate = useNavigate()
@@ -37,8 +35,6 @@ export function PratosPage() {
   const [categorias, setCategorias] = useState<CategoriaPrato[]>([])
   const [search, setSearch] = useState('')
   const [recipeSearch, setRecipeSearch] = useState('')
-  const [recipeStatus, setRecipeStatus] = useState<RecipeStatusFilter>('todos')
-  const [recipeSort, setRecipeSort] = useState<RecipeSort>('nome')
   const [categoriaId, setCategoriaId] = useState(searchParams.get('categoria') ?? '')
   const [status, setStatus] = useState<StatusFiltro>('ativos')
   const [sortBy, setSortBy] = useState<PratoSort>('nome')
@@ -251,12 +247,27 @@ export function PratosPage() {
       )}
 
       {categoriaSelecionada && (
-        <div className="mb-5 rounded border border-red-100 bg-red-50 p-4 text-sm text-red-950">
-          <p className="font-semibold">Aba da planilha</p>
-          <p className="mt-1">
-            Esta visualizacao mostra os pratos da aba {categoriaSelecionada.nome}.
-            Os insumos ficam dentro da acao Ficha Tecnica de cada prato.
-          </p>
+        <div className="mb-5 grid gap-3 rounded border border-stone-200 bg-white p-4 md:grid-cols-[1fr_auto] md:items-end">
+          <label className="block">
+            <span className="text-sm font-medium text-slate-700">Pesquisar</span>
+            <div className="relative mt-1">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                size={18}
+                aria-hidden="true"
+              />
+              <input
+                type="search"
+                value={recipeSearch}
+                onChange={(event) => setRecipeSearch(event.target.value)}
+                className="w-full rounded border border-stone-300 py-2 pl-10 pr-3 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
+                placeholder="Buscar prato pelo nome..."
+              />
+            </div>
+          </label>
+          <span className="rounded bg-stone-50 px-3 py-2 text-sm font-medium text-slate-600">
+            {pratosAba.length} prato{pratosAba.length === 1 ? '' : 's'}
+          </span>
         </div>
       )}
 
@@ -265,11 +276,6 @@ export function PratosPage() {
           isLoading={isLoading}
           pratos={pratosAba}
           search={recipeSearch}
-          status={recipeStatus}
-          sortBy={recipeSort}
-          onSearchChange={setRecipeSearch}
-          onStatusChange={setRecipeStatus}
-          onSortChange={setRecipeSort}
           onNewPrato={() => {
             setEditingPrato(null)
             setIsFormOpen(true)
@@ -608,11 +614,6 @@ function AbaPlanilhaView({
   isLoading,
   pratos,
   search,
-  status,
-  sortBy,
-  onSearchChange,
-  onStatusChange,
-  onSortChange,
   onNewPrato,
   onOpen,
   onEdit,
@@ -621,11 +622,6 @@ function AbaPlanilhaView({
   isLoading: boolean
   pratos: PratoAbaPlanilha[]
   search: string
-  status: RecipeStatusFilter
-  sortBy: RecipeSort
-  onSearchChange: (value: string) => void
-  onStatusChange: (value: RecipeStatusFilter) => void
-  onSortChange: (value: RecipeSort) => void
   onNewPrato: () => void
   onOpen: (prato: PratoAbaPlanilha) => void
   onEdit: (prato: PratoAbaPlanilha) => void
@@ -641,120 +637,75 @@ function AbaPlanilhaView({
 
   const normalizedSearch = search.trim().toLocaleLowerCase('pt-BR')
   const rows = pratos
-    .map((prato) => {
-      const ingredientsCount = prato.itens.length
-      const pendingCount = prato.itens.filter(
-        (item) =>
-          Number(item.quantidade ?? 0) <= 0 ||
-          !item.unidade_base ||
-          !item.ingredientes,
-      ).length
-      const totalCost = prato.itens.reduce(
-        (sum, item) => sum + Number(item.custo_calculado ?? 0),
-        0,
-      )
-      const recipeStatus: RecipeStatus =
-        ingredientsCount === 0
-          ? 'sem-ingredientes'
-          : pendingCount > 0
-            ? 'incompleta'
-            : 'completa'
-
-      return {
-        prato,
-        metrics: {
-          ingredientsCount,
-          pendingCount,
-          totalCost,
-          status: recipeStatus,
-        },
-      }
-    })
-    .filter(({ prato, metrics }) => {
-      const matchesSearch = prato.nome
-        .toLocaleLowerCase('pt-BR')
-        .includes(normalizedSearch)
-      const matchesStatus = status === 'todos' || metrics.status === status
-
-      return matchesSearch && matchesStatus
-    })
-    .sort((a, b) => {
-      if (sortBy === 'custo') {
-        return b.metrics.totalCost - a.metrics.totalCost
-      }
-
-      if (sortBy === 'pendencias') {
-        return b.metrics.pendingCount - a.metrics.pendingCount
-      }
-
-      return a.prato.nome.localeCompare(b.prato.nome, 'pt-BR')
-    })
+    .filter((prato) =>
+      prato.nome.toLocaleLowerCase('pt-BR').includes(normalizedSearch),
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
 
   return (
-    <div className="space-y-4">
-      <div className="rounded border border-stone-200 bg-white p-4">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-slate-950">
-            Pratos da categoria
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Selecione um prato para abrir e preencher sua ficha tecnica.
-          </p>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-[1fr_190px_170px]">
-          <label className="block">
-            <span className="text-sm font-medium text-slate-700">Pesquisar</span>
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => onSearchChange(event.target.value)}
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-              placeholder="Buscar prato"
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-slate-700">
-              Status da ficha
-            </span>
-            <select
-              value={status}
-              onChange={(event) =>
-                onStatusChange(event.target.value as RecipeStatusFilter)
-              }
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
+    <div className="rounded-lg border border-stone-200 bg-white shadow-sm">
+      {rows.length === 0 ? (
+        <div className="p-8 text-center">
+          <h3 className="text-base font-semibold text-slate-950">
+            {normalizedSearch
+              ? 'Nenhum prato encontrado para esta pesquisa.'
+              : 'Nenhum prato cadastrado nesta aba.'}
+          </h3>
+          {!normalizedSearch && (
+            <button
+              type="button"
+              className="mt-4 rounded bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"
+              onClick={onNewPrato}
             >
-              <option value="todos">Todos</option>
-              <option value="completa">Completa</option>
-              <option value="incompleta">Incompleta</option>
-              <option value="sem-ingredientes">Sem ingredientes</option>
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-slate-700">Ordenar</span>
-            <select
-              value={sortBy}
-              onChange={(event) => onSortChange(event.target.value as RecipeSort)}
-              className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-slate-900 outline-none focus:border-red-700 focus:ring-2 focus:ring-red-700/15"
-            >
-              <option value="nome">Nome</option>
-              <option value="custo">Custo</option>
-              <option value="pendencias">Pendencias</option>
-            </select>
-          </label>
+              Novo prato
+            </button>
+          )}
         </div>
-      </div>
-
-      <RecipeList
-        pratos={rows}
-        hasSearch={Boolean(normalizedSearch)}
-        onOpen={onOpen}
-        onEdit={onEdit}
-        onToggleActive={onToggleActive}
-        onNewPrato={onNewPrato}
-      />
+      ) : (
+        <div className="grid gap-2 p-3 sm:grid-cols-2 xl:grid-cols-3">
+          {rows.map((prato) => (
+            <div
+              key={prato.id}
+              role="link"
+              tabIndex={0}
+              className="group flex min-h-20 cursor-pointer items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 outline-none transition hover:border-red-200 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-700/25"
+              aria-label={`Abrir ficha tecnica de ${prato.nome}`}
+              onClick={() => onOpen(prato)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  onOpen(prato)
+                }
+              }}
+            >
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-950 group-hover:text-red-800">
+                  {prato.nome}
+                </h3>
+                <p className="mt-1 text-xs text-slate-500">
+                  {prato.itens.length} insumo{prato.itens.length === 1 ? '' : 's'}
+                </p>
+              </div>
+              <div
+                className="flex shrink-0 items-center gap-1"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <ChevronRight
+                  size={18}
+                  className="text-slate-400 transition group-hover:text-red-700"
+                  aria-hidden="true"
+                />
+                <RecipeActionsMenu
+                  ativo={prato.ativo}
+                  onOpen={() => onOpen(prato)}
+                  onEdit={() => onEdit(prato)}
+                  onToggleActive={() => onToggleActive(prato)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
