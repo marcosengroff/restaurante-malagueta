@@ -9,6 +9,18 @@ import type {
 } from '../types/ingrediente'
 import { getUnidadeBase, normalizeNome } from '../utils/ingredientes'
 
+const ordemCategoriasIngredientes = [
+  'CARNES E PROTEÍNAS',
+  'MOLHOS',
+  'QUEIJOS E LATICÍNIOS',
+  'MASSAS E FARINHAS',
+  'HORTALIÇAS E LEGUMES',
+  'FRUTAS',
+  'CEREAIS, TUBÉRCULOS E DERIVADOS',
+  'TEMPEROS, ERVAS E CONDIMENTOS',
+  'DOCES, CHOCOLATES E SOBREMESAS',
+]
+
 type IngredienteRowWithCategoria = {
   id: string
   nome: string
@@ -92,13 +104,22 @@ export async function listCategoriasIngredientes() {
     .from('categorias_ingredientes')
     .select('*')
     .eq('ativo', true)
-    .order('ordem_exibicao', { ascending: true })
+    .order('nome', { ascending: true })
 
   if (error) {
     throw new Error(error.message)
   }
 
-  return data
+  return [...(data ?? [])].sort((a, b) => {
+    const ordemA = ordemCategoriasIngredientes.indexOf(a.nome)
+    const ordemB = ordemCategoriasIngredientes.indexOf(b.nome)
+
+    if (ordemA !== -1 || ordemB !== -1) {
+      return (ordemA === -1 ? 999 : ordemA) - (ordemB === -1 ? 999 : ordemB)
+    }
+
+    return a.nome.localeCompare(b.nome, 'pt-BR')
+  })
 }
 
 async function findCategoriaIdsBySearch(search: string) {
