@@ -1,4 +1,4 @@
-import { FileSpreadsheet, Gauge, LogOut, Menu, Soup, UploadCloud, Utensils, X } from 'lucide-react'
+import { FileSpreadsheet, Gauge, LogOut, Menu, Soup, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { signOut } from '../services/authService'
@@ -35,25 +35,30 @@ export function MainLayout() {
   return (
     <div className="min-h-screen bg-stone-50 text-slate-900">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-stone-200 bg-white px-4 py-5 shadow-sm transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 overflow-hidden bg-[#111413] px-4 py-6 text-white shadow-2xl transition-transform duration-200 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[radial-gradient(circle_at_bottom_left,rgba(198,40,40,0.22),transparent_48%)]" />
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded bg-red-700 text-white">
-              <Utensils size={22} aria-hidden="true" />
-            </span>
+            <img
+              src="/logo-pimenta.png"
+              alt="Restaurante Malaguetta"
+              className="h-9 w-auto max-w-20 object-contain"
+            />
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-red-800">
+              <p className="text-lg font-bold leading-none tracking-tight text-white">
                 Malaguetta
               </p>
-              <p className="text-xs text-slate-500">Fichas e custos</p>
+              <p className="mt-1 text-[11px] font-medium text-white/65">
+                Restaurante & Pizzaria
+              </p>
             </div>
           </div>
           <button
             type="button"
-            className="rounded p-2 text-slate-500 hover:bg-stone-100 lg:hidden"
+            className="rounded p-2 text-white/65 hover:bg-white/10 lg:hidden"
             aria-label="Fechar menu"
             onClick={() => setIsSidebarOpen(false)}
           >
@@ -61,9 +66,9 @@ export function MainLayout() {
           </button>
         </div>
 
-        <nav className="mt-8 flex h-[calc(100vh-170px)] flex-col">
+        <nav className="relative z-10 mt-9 flex h-[calc(100vh-155px)] flex-col">
           <div className="min-h-0 flex-1">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[#ff3838]">
               Planilha Malaguetta
             </p>
             <div className="mt-2 max-h-full space-y-1 overflow-y-auto pr-1">
@@ -73,8 +78,8 @@ export function MainLayout() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium transition ${
                     isActive
-                      ? 'bg-red-700 text-white'
-                      : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
+                      ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
+                      : 'text-white/72 hover:bg-white/8 hover:text-white'
                   }`
                 }
               >
@@ -91,8 +96,8 @@ export function MainLayout() {
                     `flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium transition ${
                       location.pathname === '/pratos' &&
                       new URLSearchParams(location.search).get('categoria') === aba.id
-                        ? 'bg-red-700 text-white'
-                        : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
+                        ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
+                        : 'text-white/72 hover:bg-white/8 hover:text-white'
                     }`
                   }
                 >
@@ -103,19 +108,18 @@ export function MainLayout() {
             </div>
           </div>
 
-          <div className="mt-5 border-t border-stone-200 pt-4">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <div className="mt-5 border-t border-white/10 pt-4">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wide text-[#ff3838]">
               Sistema
             </p>
             <div className="mt-2 space-y-1">
               <SidebarLink to="/painel" icon={Gauge} label="Painel" onClick={() => setIsSidebarOpen(false)} />
-              <SidebarLink to="/importacao" icon={UploadCloud} label="Importacao" onClick={() => setIsSidebarOpen(false)} />
             </div>
           </div>
 
           <button
             type="button"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded border border-stone-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-stone-100"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded border border-white/12 bg-white/5 px-3 py-2 text-sm font-semibold text-white/78 hover:bg-white/10 hover:text-white"
             onClick={handleSignOut}
           >
             <LogOut size={16} aria-hidden="true" />
@@ -169,8 +173,8 @@ function SidebarLink({
       className={({ isActive }) =>
         `flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition ${
           isActive
-            ? 'bg-stone-100 text-slate-950'
-            : 'text-slate-500 hover:bg-stone-100 hover:text-slate-950'
+            ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
+            : 'text-white/70 hover:bg-white/8 hover:text-white'
         }`
       }
     >
