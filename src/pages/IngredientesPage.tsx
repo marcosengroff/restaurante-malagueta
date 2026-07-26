@@ -350,7 +350,7 @@ export function IngredientesPage() {
                       <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
                         {categoria.nome}
                       </h3>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-sm text-slate-500">
                         {ings.length} ingrediente{ings.length === 1 ? '' : 's'}
                       </p>
                     </div>
@@ -373,7 +373,7 @@ export function IngredientesPage() {
                     <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-500">
                       Sem categoria
                     </h3>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-sm text-slate-500">
                       {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}{' '}
                       ingrediente
                       {(ingredientesPorCategoria.get('sem-categoria')?.length ?? 0) ===
@@ -450,8 +450,8 @@ export function IngredientesPage() {
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[500px] border-collapse text-left text-sm">
-                      <thead className="bg-stone-50 text-xs uppercase text-slate-500">
+                    <table className="w-full min-w-[500px] border-collapse text-left text-base">
+                      <thead className="bg-stone-50 text-sm uppercase text-slate-500">
                         <tr>
                           <th className="w-1/2 px-4 py-3 font-semibold">
                             Ingrediente
@@ -475,7 +475,7 @@ export function IngredientesPage() {
                               !ing.ativo ? 'opacity-60' : ''
                             }`}
                           >
-                            <td className="px-4 py-3 font-medium text-slate-950">
+                            <td className="px-4 py-4 font-semibold text-slate-950">
                               <div className="flex items-center gap-2">
                                 <span className="truncate">{ing.nome}</span>
                                 {!ing.ativo && (
@@ -485,17 +485,17 @@ export function IngredientesPage() {
                                 )}
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-slate-600">
+                            <td className="px-4 py-4 font-medium text-slate-600">
                               {ing.unidade_compra}
                             </td>
-                            <td className="px-4 py-3 font-medium text-slate-950">
+                            <td className="px-4 py-4 font-semibold text-slate-950">
                               {formatCurrency(ing.preco_embalagem)}
-                              <span className="ml-1 text-xs text-slate-400">
+                              <span className="ml-1 text-sm font-medium text-slate-400">
                                 /{ing.quantidade_embalagem}
                                 {ing.unidade_compra}
                               </span>
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               <div className="flex justify-end gap-1">
                                 <button
                                   type="button"
@@ -567,8 +567,8 @@ export function IngredientesPage() {
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[500px] border-collapse text-left text-sm">
-                    <thead className="bg-stone-50 text-xs uppercase text-slate-500">
+                  <table className="w-full min-w-[500px] border-collapse text-left text-base">
+                    <thead className="bg-stone-50 text-sm uppercase text-slate-500">
                       <tr>
                         <th className="w-1/2 px-4 py-3 font-semibold">
                           Ingrediente
@@ -587,7 +587,7 @@ export function IngredientesPage() {
                               !ing.ativo ? 'opacity-60' : ''
                             }`}
                           >
-                            <td className="px-4 py-3 font-medium text-slate-950">
+                            <td className="px-4 py-4 font-semibold text-slate-950">
                               <div className="flex items-center gap-2">
                                 <span>{ing.nome}</span>
                                 {!ing.ativo && (
@@ -597,17 +597,17 @@ export function IngredientesPage() {
                                 )}
                               </div>
                             </td>
-                            <td className="px-4 py-3 text-slate-600">
+                            <td className="px-4 py-4 font-medium text-slate-600">
                               {ing.unidade_compra}
                             </td>
-                            <td className="px-4 py-3 font-medium text-slate-950">
+                            <td className="px-4 py-4 font-semibold text-slate-950">
                               {formatCurrency(ing.preco_embalagem)}
-                              <span className="ml-1 text-xs text-slate-400">
+                              <span className="ml-1 text-sm font-medium text-slate-400">
                                 /{ing.quantidade_embalagem}
                                 {ing.unidade_compra}
                               </span>
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               <div className="flex justify-end gap-1">
                                 <button
                                   type="button"
