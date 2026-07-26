@@ -2,7 +2,11 @@ import { AlertCircle, ArrowRight, Eye, EyeOff, Lock, Mail, UserPlus } from 'luci
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { getCurrentSession, signInWithPassword } from '../services/authService'
+import {
+  getCurrentSession,
+  signInWithPassword,
+  signUpWithPassword,
+} from '../services/authService'
 
 const leftPanelSrc = '/login-left-panel.png'
 const pepperLogoSrc = '/logo-pimenta.png'
@@ -17,6 +21,7 @@ export function LoginPage() {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const [isCheckingSession, setIsCheckingSession] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [error, setError] = useState('')
@@ -43,13 +48,52 @@ export function LoginPage() {
       await signInWithPassword(email.trim(), password)
       navigate(from ?? '/painel', { replace: true })
     } catch (loginError) {
-      setError(
+      const message =
         loginError instanceof Error
           ? loginError.message
-          : 'Não foi possível entrar no sistema.',
+          : 'Nao foi possivel entrar no sistema.'
+
+      setError(
+        message === 'Email not confirmed'
+          ? 'E-mail ainda nao confirmado no Supabase. Confirme o usuario em Authentication > Users para liberar o acesso.'
+          : message,
       )
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  async function handleCreateAccount() {
+    setError('')
+
+    if (!email.trim() || password.length < 6) {
+      setError(
+        'Informe um e-mail e uma senha com pelo menos 6 caracteres para criar a conta.',
+      )
+      return
+    }
+
+    setIsCreatingAccount(true)
+
+    try {
+      const data = await signUpWithPassword(email.trim(), password)
+
+      if (data.session) {
+        navigate(from ?? '/painel', { replace: true })
+        return
+      }
+
+      setError(
+        'Conta criada. O Supabase exige confirmacao de e-mail antes do primeiro acesso.',
+      )
+    } catch (createError) {
+      setError(
+        createError instanceof Error
+          ? createError.message
+          : 'Nao foi possivel criar a conta.',
+      )
+    } finally {
+      setIsCreatingAccount(false)
     }
   }
 
@@ -72,13 +116,13 @@ export function LoginPage() {
           <img
             src={leftPanelSrc}
             alt="Restaurante Malaguetta"
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-contain object-left"
           />
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-r from-transparent to-[#080808]/80" />
+          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-r from-transparent via-[#080808]/35 to-[#080808]" />
         </aside>
 
         <section className="relative flex h-screen items-center justify-center overflow-hidden px-4 py-4 sm:px-8">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(198,40,40,0.12),transparent_30%),linear-gradient(120deg,#080808,#151515_48%,#080808)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(198,40,40,0.1),transparent_30%),linear-gradient(120deg,#080808,#151515_48%,#080808)]" />
           <LoginCard
             email={email}
             password={password}
@@ -86,11 +130,13 @@ export function LoginPage() {
             showPassword={showPassword}
             error={error}
             isSubmitting={isSubmitting}
+            isCreatingAccount={isCreatingAccount}
             onEmailChange={setEmail}
             onPasswordChange={setPassword}
             onRememberMeChange={setRememberMe}
             onTogglePassword={() => setShowPassword((current) => !current)}
             onSubmit={handleSubmit}
+            onCreateAccount={handleCreateAccount}
           />
         </section>
       </section>
@@ -105,11 +151,13 @@ function LoginCard({
   showPassword,
   error,
   isSubmitting,
+  isCreatingAccount,
   onEmailChange,
   onPasswordChange,
   onRememberMeChange,
   onTogglePassword,
   onSubmit,
+  onCreateAccount,
 }: {
   email: string
   password: string
@@ -117,11 +165,13 @@ function LoginCard({
   showPassword: boolean
   error: string
   isSubmitting: boolean
+  isCreatingAccount: boolean
   onEmailChange: (value: string) => void
   onPasswordChange: (value: string) => void
   onRememberMeChange: (value: boolean) => void
   onTogglePassword: () => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onCreateAccount: () => void
 }) {
   return (
     <div className="relative z-10 flex max-h-[calc(100vh-32px)] w-full max-w-[650px] flex-col rounded-2xl border border-[#C62828]/80 bg-[#151515]/86 px-7 py-7 shadow-[0_28px_90px_rgba(0,0,0,0.48)] backdrop-blur-md sm:px-12 lg:px-14">
@@ -237,10 +287,12 @@ function LoginCard({
 
       <button
         type="button"
-        className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15"
+        className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15 disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={isCreatingAccount}
+        onClick={onCreateAccount}
       >
         <UserPlus size={27} className="text-[#ff3838]" aria-hidden="true" />
-        Criar conta
+        {isCreatingAccount ? 'Criando conta...' : 'Criar conta'}
       </button>
     </div>
   )
