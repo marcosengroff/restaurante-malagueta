@@ -113,7 +113,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
+              className="malaguetta-card relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
             >
               {content}
             </Link>
@@ -123,7 +123,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
+            className="malaguetta-card relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
           >
             {content}
           </div>

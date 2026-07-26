@@ -34,7 +34,7 @@ export function QuickActions() {
           <Link
             key={action.label}
             to={action.to}
-            className="relative flex min-h-24 items-center gap-4 overflow-hidden rounded-xl border border-stone-100 bg-white px-5 py-4 text-sm font-semibold text-slate-800 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/35"
+            className="malaguetta-card relative flex min-h-24 items-center gap-4 overflow-hidden rounded-xl border border-stone-100 bg-white px-5 py-4 text-base font-semibold text-slate-800 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/35"
           >
             <span className="absolute left-0 top-4 h-6 w-1 rounded-r-full bg-[#C62828]" />
             <span className="absolute inset-x-0 bottom-0 h-1 bg-[#C62828]" />

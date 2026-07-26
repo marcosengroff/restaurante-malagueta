@@ -74,7 +74,7 @@ export function MainLayout() {
                 to="/ingredientes"
                 onClick={() => setIsSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium transition ${
+                  `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
                     isActive
                       ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
                       : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
@@ -91,7 +91,7 @@ export function MainLayout() {
                   to={`/pratos?categoria=${aba.id}`}
                   onClick={() => setIsSidebarOpen(false)}
                   className={() =>
-                    `flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium transition ${
+                    `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
                       location.pathname === '/pratos' &&
                       new URLSearchParams(location.search).get('categoria') === aba.id
                         ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
@@ -108,7 +108,7 @@ export function MainLayout() {
 
           <button
             type="button"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded border border-white/12 bg-white/5 px-3 py-2 text-sm font-semibold text-white/78 hover:bg-white/10 hover:text-white"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded border border-white/12 bg-white/5 px-3 py-2 text-base font-semibold text-white/78 hover:bg-white/10 hover:text-white"
             onClick={handleSignOut}
           >
             <LogOut size={16} aria-hidden="true" />
@@ -160,7 +160,7 @@ function SidebarLink({
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
-        `flex items-center gap-3 rounded px-3 py-2 text-sm font-medium transition ${
+        `flex items-center gap-3 rounded px-3 py-2 text-base font-medium transition ${
           isActive
             ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
             : 'text-white/70 hover:bg-[#C62828]/18 hover:text-white'
