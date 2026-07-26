@@ -8,7 +8,7 @@ import {
   signUpWithPassword,
 } from '../services/authService'
 
-const leftPanelSrc = '/login-left-panel.png'
+const loginBackgroundSrc = '/login-background.png'
 const pepperLogoSrc = '/logo-pimenta.png'
 
 export function LoginPage() {
@@ -110,35 +110,30 @@ export function LoginPage() {
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-[#080808] text-white">
-      <section className="grid h-screen lg:grid-cols-[50%_50%]">
-        <aside className="relative hidden h-screen overflow-hidden bg-[#080808] lg:block">
-          <img
-            src={leftPanelSrc}
-            alt="Restaurante Malaguetta"
-            className="h-full w-full object-cover object-center"
-          />
-          <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-r from-transparent via-[#080808]/35 to-[#080808]" />
-        </aside>
+    <main className="relative h-screen overflow-hidden bg-[#080808] text-white">
+      <img
+        src={loginBackgroundSrc}
+        alt="Restaurante Malaguetta"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/18 to-black/5" />
 
-        <section className="relative flex h-screen items-center justify-end overflow-hidden px-4 py-4 sm:px-8 lg:-ml-20 lg:pl-0 lg:pr-10 xl:pr-16">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(198,40,40,0.1),transparent_30%),linear-gradient(120deg,#080808,#151515_48%,#080808)]" />
-          <LoginCard
-            email={email}
-            password={password}
-            rememberMe={rememberMe}
-            showPassword={showPassword}
-            error={error}
-            isSubmitting={isSubmitting}
-            isCreatingAccount={isCreatingAccount}
-            onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onRememberMeChange={setRememberMe}
-            onTogglePassword={() => setShowPassword((current) => !current)}
-            onSubmit={handleSubmit}
-            onCreateAccount={handleCreateAccount}
-          />
-        </section>
+      <section className="relative z-10 flex h-screen items-center justify-start overflow-hidden px-4 py-4 sm:px-8 lg:px-14 xl:px-20">
+        <LoginCard
+          email={email}
+          password={password}
+          rememberMe={rememberMe}
+          showPassword={showPassword}
+          error={error}
+          isSubmitting={isSubmitting}
+          isCreatingAccount={isCreatingAccount}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onRememberMeChange={setRememberMe}
+          onTogglePassword={() => setShowPassword((current) => !current)}
+          onSubmit={handleSubmit}
+          onCreateAccount={handleCreateAccount}
+        />
       </section>
     </main>
   )
@@ -174,7 +169,7 @@ function LoginCard({
   onCreateAccount: () => void
 }) {
   return (
-    <div className="relative z-10 flex max-h-[calc(100vh-32px)] w-full max-w-[560px] flex-col rounded-2xl border border-[#C62828]/80 bg-[#151515]/86 px-7 py-7 shadow-[0_28px_90px_rgba(0,0,0,0.48)] backdrop-blur-md sm:px-10 lg:px-11">
+    <div className="relative z-10 flex max-h-[calc(100vh-32px)] w-full max-w-[520px] flex-col rounded-2xl border border-[#C62828]/80 bg-[#151515]/84 px-7 py-7 shadow-[0_28px_90px_rgba(0,0,0,0.48)] backdrop-blur-md sm:px-10 lg:px-11">
       <div className="text-center">
         <img
           src={pepperLogoSrc}
