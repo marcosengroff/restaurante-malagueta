@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   CheckCircle2,
   ChevronRight,
   Edit,
@@ -114,10 +115,6 @@ export function IngredientesPage() {
     const data = await listCategoriasIngredientes()
     setCategorias(data)
 
-    // Auto-select first category if none selected
-    if (data.length > 0 && !selectedCategoryId) {
-      setSelectedCategoryId(data[0].id)
-    }
   }
 
   const loadIngredientes = useCallback(async () => {
@@ -331,106 +328,80 @@ export function IngredientesPage() {
               : 'Cadastre o primeiro ingrediente usando o botao acima.'}
           </p>
         </div>
-      ) : (
-        <div className="flex flex-col gap-0 overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm lg:flex-row">
-          {/* Sidebar - Category List */}
-          <aside className="w-full border-b border-stone-200 lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
-            <div className="max-h-[calc(100vh-390px)] overflow-y-auto">
-              {isLoading ? (
-                <div className="flex items-center justify-center p-6">
-                  <span className="text-sm text-slate-400">Carregando...</span>
-                </div>
-              ) : (
-                <div className="space-y-0.5 px-2 py-3">
-                  {categoriasVisiveis.map((categoria) => {
-                    const ings = ingredientesPorCategoria.get(categoria.id) ?? []
-                    const isSelected = selectedCategoryId === categoria.id
+      ) : !selectedCategoryId ? (
+        <div className="rounded-lg border border-stone-200 bg-white shadow-sm">
+          {isLoading ? (
+            <div className="flex items-center justify-center p-8">
+              <span className="text-sm text-slate-400">Carregando...</span>
+            </div>
+          ) : (
+            <div className="grid gap-2 p-3 sm:grid-cols-2 xl:grid-cols-3">
+              {categoriasVisiveis.map((categoria) => {
+                const ings = ingredientesPorCategoria.get(categoria.id) ?? []
 
-                    return (
-                      <button
-                        key={categoria.id}
-                        type="button"
-                        className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
-                          isSelected
-                            ? 'bg-red-700 text-white'
-                            : 'text-slate-600 hover:bg-stone-100 hover:text-slate-950'
-                        }`}
-                        onClick={() => setSelectedCategoryId(categoria.id)}
-                      >
-                        <div className="flex min-w-0 items-center gap-2">
-                          <ChevronRight
-                            size={14}
-                            className={`shrink-0 transition-transform ${
-                              isSelected ? 'text-white' : 'text-slate-400'
-                            }`}
-                            aria-hidden="true"
-                          />
-                          <span className="truncate font-medium">
-                            {categoria.nome}
-                          </span>
-                        </div>
-                        <span
-                          className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
-                            isSelected
-                              ? 'bg-red-600 text-white'
-                              : 'bg-stone-100 text-slate-500'
-                          }`}
-                        >
-                          {ings.length}
-                        </span>
-                      </button>
-                    )
-                  })}
-
-                  {temIngredientesSemCategoria && (
-                    <button
-                      type="button"
-                      className={`flex w-full items-center justify-between gap-2 rounded px-3 py-2.5 text-left text-sm transition ${
-                        selectedCategoryId === 'sem-categoria'
-                          ? 'bg-red-700 text-white'
-                          : 'text-slate-500 hover:bg-stone-100 hover:text-slate-950'
-                      }`}
-                      onClick={() => setSelectedCategoryId('sem-categoria')}
-                    >
-                      <div className="flex min-w-0 items-center gap-2">
-                        <ChevronRight
-                          size={14}
-                          className={`shrink-0 transition-transform ${
-                            selectedCategoryId === 'sem-categoria'
-                              ? 'text-white'
-                              : 'text-slate-400'
-                          }`}
-                          aria-hidden="true"
-                        />
-                        <span className="truncate font-medium">
-                          Sem categoria
-                        </span>
-                      </div>
-                      <span
-                        className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-medium ${
-                          selectedCategoryId === 'sem-categoria'
-                            ? 'bg-red-600 text-white'
-                            : 'bg-stone-100 text-slate-500'
-                        }`}
-                      >
-                        {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}
-                      </span>
-                    </button>
-                  )}
-
-                  {categoriasVisiveis.length === 0 && !temIngredientesSemCategoria && (
-                    <div className="px-3 py-6 text-center text-sm text-slate-400">
-                      {search.trim()
-                        ? 'Nenhuma categoria encontrada para esta busca.'
-                        : 'Nenhuma categoria cadastrada.'}
+                return (
+                  <button
+                    key={categoria.id}
+                    type="button"
+                    className="group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
+                    onClick={() => setSelectedCategoryId(categoria.id)}
+                  >
+                    <div className="min-w-0">
+                      <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-950">
+                        {categoria.nome}
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {ings.length} ingrediente{ings.length === 1 ? '' : 's'}
+                      </p>
                     </div>
-                  )}
+                    <ChevronRight
+                      size={18}
+                      className="shrink-0 text-slate-400 transition group-hover:text-red-700"
+                      aria-hidden="true"
+                    />
+                  </button>
+                )
+              })}
+
+              {temIngredientesSemCategoria && (
+                <button
+                  type="button"
+                  className="group flex min-h-20 items-center justify-between gap-3 rounded border border-stone-200 bg-stone-50 px-4 py-3 text-left transition hover:border-red-200 hover:bg-red-50"
+                  onClick={() => setSelectedCategoryId('sem-categoria')}
+                >
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-bold uppercase tracking-wide text-slate-500">
+                      Sem categoria
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {ingredientesPorCategoria.get('sem-categoria')?.length ?? 0}{' '}
+                      ingrediente
+                      {(ingredientesPorCategoria.get('sem-categoria')?.length ?? 0) ===
+                      1
+                        ? ''
+                        : 's'}
+                    </p>
+                  </div>
+                  <ChevronRight
+                    size={18}
+                    className="shrink-0 text-slate-400 transition group-hover:text-red-700"
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
+
+              {categoriasVisiveis.length === 0 && !temIngredientesSemCategoria && (
+                <div className="p-8 text-center text-sm text-slate-400 sm:col-span-2 xl:col-span-3">
+                  {search.trim()
+                    ? 'Nenhuma secao encontrada para esta busca.'
+                    : 'Nenhuma secao de ingredientes cadastrada.'}
                 </div>
               )}
             </div>
-          </aside>
-
-          {/* Main Content - Ingredient Table */}
+          )}
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm">
           <div className="min-w-0 flex-1">
             {isLoading ? (
               <div className="flex items-center justify-center p-8">
@@ -438,18 +409,28 @@ export function IngredientesPage() {
               </div>
             ) : selectedCategory ? (
               <>
-                <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
-                  <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
-                    {selectedCategory.nome}
-                  </h3>
+                <div className="flex flex-col gap-3 border-b border-stone-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <button
+                      type="button"
+                      className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
+                      aria-label="Voltar para secoes"
+                      title="Voltar"
+                      onClick={() => setSelectedCategoryId(null)}
+                    >
+                      <ArrowLeft size={16} aria-hidden="true" />
+                    </button>
+                    <h3 className="truncate text-base font-bold uppercase tracking-wide text-slate-950">
+                      {selectedCategory.nome}
+                    </h3>
+                  </div>
                   <button
                     type="button"
-                    className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
-                    aria-label={`Adicionar ingrediente em ${selectedCategory.nome}`}
-                    title="Adicionar ingrediente"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded bg-red-700 px-3 py-2 text-sm font-semibold text-white hover:bg-red-800"
                     onClick={() => openCreateForm()}
                   >
                     <Plus size={16} aria-hidden="true" />
+                    Novo ingrediente
                   </button>
                 </div>
 
@@ -560,17 +541,28 @@ export function IngredientesPage() {
             ) : selectedCategoryId === 'sem-categoria' ? (
               <>
                 <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
-                  <h3 className="text-base font-bold uppercase tracking-wide text-slate-500">
-                    Sem categoria
-                  </h3>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <button
+                      type="button"
+                      className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
+                      aria-label="Voltar para secoes"
+                      title="Voltar"
+                      onClick={() => setSelectedCategoryId(null)}
+                    >
+                      <ArrowLeft size={16} aria-hidden="true" />
+                    </button>
+                    <h3 className="text-base font-bold uppercase tracking-wide text-slate-500">
+                      Sem categoria
+                    </h3>
+                  </div>
                   <button
                     type="button"
-                    className="shrink-0 rounded border border-stone-300 p-1.5 text-slate-500 hover:bg-stone-100"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded bg-red-700 px-3 py-2 text-sm font-semibold text-white hover:bg-red-800"
                     aria-label="Adicionar ingrediente"
-                    title="Adicionar ingrediente"
                     onClick={() => openCreateForm()}
                   >
                     <Plus size={16} aria-hidden="true" />
+                    Novo ingrediente
                   </button>
                 </div>
 
@@ -667,6 +659,11 @@ export function IngredientesPage() {
         <IngredienteForm
           categorias={categoriasFormulario}
           ingrediente={editingIngrediente}
+          initialCategoriaId={
+            selectedCategoryId && selectedCategoryId !== 'sem-categoria'
+              ? selectedCategoryId
+              : ''
+          }
           isSubmitting={isSubmitting}
           onCancel={() => {
             setIsFormOpen(false)

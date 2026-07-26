@@ -13,6 +13,7 @@ import { ingredienteSchema } from '../utils/ingredienteValidation'
 type IngredienteFormProps = {
   categorias: CategoriaIngrediente[]
   ingrediente: Ingrediente | null
+  initialCategoriaId?: string
   isSubmitting: boolean
   onCancel: () => void
   onSubmit: (values: IngredienteFormValues) => Promise<void>
@@ -31,6 +32,7 @@ const defaultValues: IngredienteFormValues = {
 export function IngredienteForm({
   categorias,
   ingrediente,
+  initialCategoriaId = '',
   isSubmitting,
   onCancel,
   onSubmit,
@@ -62,8 +64,11 @@ export function IngredienteForm({
       return
     }
 
-    reset(defaultValues)
-  }, [ingrediente, reset])
+    reset({
+      ...defaultValues,
+      categoria_id: initialCategoriaId,
+    })
+  }, [ingrediente, initialCategoriaId, reset])
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/40 p-0 sm:items-center sm:p-4">
