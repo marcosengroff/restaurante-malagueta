@@ -3,6 +3,7 @@ import type { Database } from '../types/database'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const normalizedSupabaseUrl = supabaseUrl?.replace(/\/rest\/v1\/?$/, '')
 
 if (import.meta.env.DEV && (!supabaseUrl || !supabaseAnonKey)) {
   console.warn(
@@ -11,6 +12,6 @@ if (import.meta.env.DEV && (!supabaseUrl || !supabaseAnonKey)) {
 }
 
 export const supabase = createClient<Database>(
-  supabaseUrl ?? '',
+  normalizedSupabaseUrl ?? '',
   supabaseAnonKey ?? '',
 )

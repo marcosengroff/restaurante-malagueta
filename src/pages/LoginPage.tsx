@@ -67,18 +67,18 @@ export function LoginPage() {
 
   return (
     <main className="h-screen overflow-hidden bg-[#080808] text-white">
-      <section className="grid h-screen lg:grid-cols-[45%_55%]">
+      <section className="grid h-screen lg:grid-cols-[44%_56%]">
         <aside className="relative hidden h-screen overflow-hidden bg-[#080808] lg:block">
           <img
             src={leftPanelSrc}
             alt="Restaurante Malaguetta"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-top"
           />
-          <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#080808]" />
+          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-r from-transparent to-[#080808]/80" />
         </aside>
 
         <section className="relative flex h-screen items-center justify-center overflow-hidden px-4 py-4 sm:px-8">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(198,40,40,0.16),transparent_30%),linear-gradient(120deg,#080808,#171717_48%,#080808)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(198,40,40,0.12),transparent_30%),linear-gradient(120deg,#080808,#151515_48%,#080808)]" />
           <LoginCard
             email={email}
             password={password}
