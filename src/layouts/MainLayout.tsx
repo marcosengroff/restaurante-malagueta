@@ -48,10 +48,10 @@ export function MainLayout() {
               className="h-9 w-auto max-w-20 object-contain"
             />
             <div>
-              <p className="text-lg font-bold leading-none tracking-tight text-white">
+              <p className="text-2xl font-bold leading-none tracking-tight text-white">
                 Malaguetta
               </p>
-              <p className="mt-1 text-[11px] font-medium text-white/65">
+              <p className="mt-1 text-sm font-medium text-white/65">
                 Restaurante & Pizzaria
               </p>
             </div>
