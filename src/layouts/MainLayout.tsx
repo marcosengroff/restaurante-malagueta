@@ -1,4 +1,4 @@
-import { FileSpreadsheet, Gauge, LogOut, Menu, Soup, X } from 'lucide-react'
+import { FileSpreadsheet, Gauge, LogOut, Menu, Settings, Soup, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { signOut } from '../services/authService'
@@ -103,6 +103,12 @@ export function MainLayout() {
                   <span className="truncate">{aba.nome}</span>
                 </NavLink>
               ))}
+              <SidebarLink
+                to="/configuracoes"
+                icon={Settings}
+                label="Configuracoes"
+                onClick={() => setIsSidebarOpen(false)}
+              />
             </div>
           </div>
 

@@ -46,6 +46,17 @@ export async function signUpWithPassword(email: string, password: string) {
   return data
 }
 
+export async function sendPasswordResetEmail(email: string) {
+  const redirectTo = `${window.location.origin}/login`
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+}
+
 export async function signOut() {
   const { error } = await supabase.auth.signOut()
 

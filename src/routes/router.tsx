@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { MainLayout } from '../layouts/MainLayout'
 import { CategoriasPage } from '../pages/CategoriasPage'
+import { ConfiguracoesPage } from '../pages/ConfiguracoesPage'
 import { FichaTecnicaPratoPage } from '../pages/FichaTecnicaPratoPage'
 import { FichasTecnicasPage } from '../pages/FichasTecnicasPage'
 import { IngredientesPage } from '../pages/IngredientesPage'
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
           {
             path: '/importacao',
             element: <ImportacaoPage />,
+          },
+          {
+            path: '/configuracoes',
+            element: <ConfiguracoesPage />,
           },
         ],
       },

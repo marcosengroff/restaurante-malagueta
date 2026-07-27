@@ -17,7 +17,7 @@ function getGreeting() {
 
 function getDisplayName(user: Awaited<ReturnType<typeof getCurrentUser>> | null) {
   if (!user) {
-    return 'usuário'
+    return 'usuario'
   }
 
   const metadataName =
@@ -27,18 +27,18 @@ function getDisplayName(user: Awaited<ReturnType<typeof getCurrentUser>> | null)
         ? user.user_metadata.full_name
         : ''
   const emailName = user.email?.split('@')[0] ?? ''
-  const name = (metadataName || emailName || 'usuário').trim()
+  const name = (metadataName || emailName || 'usuario').trim().split(/\s+/)[0]
 
   return name.charAt(0).toLocaleUpperCase('pt-BR') + name.slice(1)
 }
 
 export function DashboardHeader() {
-  const [displayName, setDisplayName] = useState('usuário')
+  const [displayName, setDisplayName] = useState('usuario')
 
   useEffect(() => {
     getCurrentUser()
       .then((user) => setDisplayName(getDisplayName(user)))
-      .catch(() => setDisplayName('usuário'))
+      .catch(() => setDisplayName('usuario'))
   }, [])
 
   return (
@@ -48,7 +48,7 @@ export function DashboardHeader() {
           {getGreeting()}, {displayName}
         </h1>
         <p className="mt-2 text-sm text-slate-600">
-          Bem-vindo ao painel de controle das fichas técnicas.
+          Bem-vindo ao painel de controle das fichas tecnicas.
         </p>
       </div>
       <div className="rounded border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm">
