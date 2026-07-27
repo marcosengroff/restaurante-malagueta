@@ -169,17 +169,17 @@ function LoginCard({
   onCreateAccount: () => void
 }) {
   return (
-    <div className="relative z-10 flex max-h-[calc(100vh-32px)] w-full max-w-[520px] flex-col rounded-2xl border border-[#C62828]/80 bg-[#151515]/84 px-7 py-7 shadow-[0_28px_90px_rgba(0,0,0,0.48)] backdrop-blur-md sm:px-10 lg:px-11">
+    <div className="relative z-10 flex max-h-[calc(100vh-32px)] w-full max-w-[500px] flex-col rounded-2xl border border-[#C62828]/80 bg-[#151515]/84 px-7 py-5 shadow-[0_28px_90px_rgba(0,0,0,0.48)] backdrop-blur-md sm:px-9 lg:px-10">
       <div className="text-center">
         <img
           src={pepperLogoSrc}
           alt="Pimenta Malaguetta"
-          className="mx-auto h-14 w-auto max-w-56 object-contain"
+          className="mx-auto h-12 w-auto max-w-52 object-contain"
         />
-        <h1 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+        <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Restaurante Malaguetta
         </h1>
-        <div className="mt-3 flex items-center justify-center gap-7">
+        <div className="mt-2 flex items-center justify-center gap-7">
           <span className="h-px w-16 bg-[#2E7D32]" />
           <p className="text-base text-white/70 sm:text-lg">Acesso ao sistema</p>
           <span className="h-px w-16 bg-[#C62828]" />
@@ -193,7 +193,7 @@ function LoginCard({
         </div>
       )}
 
-      <form className="mt-6 space-y-5" onSubmit={onSubmit}>
+      <form className="mt-5 space-y-4" onSubmit={onSubmit}>
         <label className="block">
           <span className="text-sm font-bold text-white">E-mail</span>
           <div className="relative mt-2">
@@ -206,7 +206,7 @@ function LoginCard({
               type="email"
               value={email}
               onChange={(event) => onEmailChange(event.target.value)}
-              className="h-14 w-full rounded-lg border border-white/18 bg-[#111]/68 px-16 text-base text-white outline-none transition placeholder:text-white/36 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
+              className="h-12 w-full rounded-lg border border-white/18 bg-[#111]/68 px-16 text-base text-white outline-none transition placeholder:text-white/36 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
               placeholder="Digite seu e-mail"
               autoComplete="email"
               required
@@ -226,7 +226,7 @@ function LoginCard({
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
-              className="h-14 w-full rounded-lg border border-white/18 bg-[#111]/68 px-16 pr-16 text-base text-white outline-none transition placeholder:text-white/36 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
+              className="h-12 w-full rounded-lg border border-white/18 bg-[#111]/68 px-16 pr-16 text-base text-white outline-none transition placeholder:text-white/36 focus:border-[#C62828] focus:bg-[#151515] focus:ring-4 focus:ring-[#C62828]/15"
               placeholder="Digite sua senha"
               autoComplete="current-password"
               required
@@ -266,7 +266,7 @@ function LoginCard({
 
         <button
           type="submit"
-          className="flex h-14 w-full items-center justify-center gap-12 rounded-lg bg-[#C62828] px-5 text-base font-bold text-white shadow-[0_18px_38px_rgba(198,40,40,0.25)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#d11f1f] hover:shadow-[0_22px_50px_rgba(198,40,40,0.35)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
+          className="flex h-12 w-full items-center justify-center gap-12 rounded-lg bg-[#C62828] px-5 text-base font-bold text-white shadow-[0_18px_38px_rgba(198,40,40,0.25)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#d11f1f] hover:shadow-[0_22px_50px_rgba(198,40,40,0.35)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-red-300 disabled:shadow-none"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Entrando...' : 'Entrar'}
@@ -274,7 +274,7 @@ function LoginCard({
         </button>
       </form>
 
-      <div className="mt-7 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <div className="mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
         <span className="h-px bg-white/10" />
         <p className="text-sm text-white/45">Ainda não tem uma conta?</p>
         <span className="h-px bg-white/10" />
@@ -282,7 +282,7 @@ function LoginCard({
 
       <button
         type="button"
-        className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-4 inline-flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-[#C62828] bg-transparent text-base font-bold text-white transition hover:bg-[#C62828]/12 hover:shadow-[0_0_30px_rgba(198,40,40,0.16)] focus:outline-none focus:ring-4 focus:ring-[#C62828]/15 disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isCreatingAccount}
         onClick={onCreateAccount}
       >
