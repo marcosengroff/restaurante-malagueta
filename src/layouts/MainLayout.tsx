@@ -165,7 +165,7 @@ export function MainLayout() {
             <div className="text-right text-sm font-medium text-slate-500">
               <p>Desenvolvido por Marcos Engroff</p>
               <a
-                href="https://wa.me/5555999634342"
+                href="https://wa.me/5555999634342?text=Olá,%20Marcos!%20Estou%20utilizando%20o%20Restaurante%20Malaguetta%20e%20gostaria%20de%20falar%20com%20você."
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Fale comigo no WhatsApp"
