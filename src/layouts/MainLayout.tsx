@@ -4,6 +4,12 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { signOut } from '../services/authService'
 import { listCategoriasPratosMenu } from '../services/categoriasPratosService'
 
+function formatMenuLabel(value: string) {
+  return value
+    .toLocaleLowerCase('pt-BR')
+    .replace(/(^|\s|\.|-)(\p{L})/gu, (match) => match.toLocaleUpperCase('pt-BR'))
+}
+
 export function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [abasPlanilha, setAbasPlanilha] = useState<
@@ -69,7 +75,12 @@ export function MainLayout() {
         <nav className="relative z-10 mt-9 flex h-[calc(100vh-155px)] flex-col">
           <div className="min-h-0 flex-1">
             <div className="max-h-full space-y-1 overflow-y-auto pr-1">
-              <SidebarLink to="/painel" icon={Gauge} label="Painel" onClick={() => setIsSidebarOpen(false)} />
+              <SidebarLink
+                to="/painel"
+                icon={Gauge}
+                label="Painel"
+                onClick={() => setIsSidebarOpen(false)}
+              />
               <NavLink
                 to="/ingredientes"
                 onClick={() => setIsSidebarOpen(false)}
@@ -82,7 +93,7 @@ export function MainLayout() {
                 }
               >
                 <Soup size={17} aria-hidden="true" />
-                INGREDIENTES
+                Ingredientes
               </NavLink>
 
               {abasPlanilha.map((aba) => (
@@ -100,13 +111,13 @@ export function MainLayout() {
                   }
                 >
                   <FileSpreadsheet size={17} aria-hidden="true" />
-                  <span className="truncate">{aba.nome}</span>
+                  <span className="truncate">{formatMenuLabel(aba.nome)}</span>
                 </NavLink>
               ))}
               <SidebarLink
                 to="/configuracoes"
                 icon={Settings}
-                label="Configuracoes"
+                label="Configurações"
                 onClick={() => setIsSidebarOpen(false)}
               />
             </div>
