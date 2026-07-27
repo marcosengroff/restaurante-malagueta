@@ -232,9 +232,40 @@ export type Database = {
           },
         ]
       }
+      perfis_usuarios: {
+        Row: {
+          id: string
+          user_id: string | null
+          email: string
+          role: 'admin' | 'usuario'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          email: string
+          role?: 'admin' | 'usuario'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          email?: string
+          role?: 'admin' | 'usuario'
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {
+      is_admin: {
+        Args: Record<string, never>
+        Returns: boolean
+      }
       registrar_importacao_planilha: {
         Args: {
           nome_arquivo: string

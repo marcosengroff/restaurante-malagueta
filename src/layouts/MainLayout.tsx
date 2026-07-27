@@ -1,6 +1,7 @@
 import { FileSpreadsheet, Gauge, LogOut, Menu, Settings, Soup, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useAdminStatus } from '../hooks/useAdminStatus'
 import { signOut } from '../services/authService'
 import { listCategoriasPratosMenu } from '../services/categoriasPratosService'
 
@@ -17,6 +18,7 @@ export function MainLayout() {
   >([])
   const navigate = useNavigate()
   const location = useLocation()
+  const { isAdmin } = useAdminStatus()
 
   useEffect(() => {
     listCategoriasPratosMenu()
@@ -114,12 +116,14 @@ export function MainLayout() {
                   <span className="truncate">{formatMenuLabel(aba.nome)}</span>
                 </NavLink>
               ))}
-              <SidebarLink
-                to="/configuracoes"
-                icon={Settings}
-                label="Configurações"
-                onClick={() => setIsSidebarOpen(false)}
-              />
+              {isAdmin && (
+                <SidebarLink
+                  to="/configuracoes"
+                  icon={Settings}
+                  label="Configurações"
+                  onClick={() => setIsSidebarOpen(false)}
+                />
+              )}
             </div>
           </div>
 

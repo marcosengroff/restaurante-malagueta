@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { AdminRoute } from '../components/AdminRoute'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { MainLayout } from '../layouts/MainLayout'
 import { CategoriasPage } from '../pages/CategoriasPage'
@@ -55,8 +56,13 @@ export const router = createBrowserRouter([
             element: <ImportacaoPage />,
           },
           {
-            path: '/configuracoes',
-            element: <ConfiguracoesPage />,
+            element: <AdminRoute />,
+            children: [
+              {
+                path: '/configuracoes',
+                element: <ConfiguracoesPage />,
+              },
+            ],
           },
         ],
       },
