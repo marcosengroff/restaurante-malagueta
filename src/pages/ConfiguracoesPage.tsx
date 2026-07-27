@@ -42,17 +42,32 @@ export function ConfiguracoesPage() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(true)
   const [isSending, setIsSending] = useState(false)
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const [adminFunctionError, setAdminFunctionError] = useState<string | null>(
+    null,
+  )
   const [message, setMessage] = useState<{
     type: 'success' | 'error'
     text: string
   } | null>(null)
 
   useEffect(() => {
-    Promise.all([getCurrentUser(), listAdminUsers()])
-      .then(([currentUser, authUsers]) => {
+    getCurrentUser()
+      .then(async (currentUser) => {
         setUser(currentUser)
-        setUsers(authUsers)
         setResetEmail(currentUser.email ?? '')
+
+        try {
+          const authUsers = await listAdminUsers()
+          setUsers(authUsers)
+          setAdminFunctionError(null)
+        } catch (error) {
+          setUsers([])
+          setAdminFunctionError(
+            error instanceof Error
+              ? error.message
+              : 'Nao foi possivel acessar a funcao administrativa.',
+          )
+        }
       })
       .catch((error) => {
         setMessage({
@@ -75,7 +90,14 @@ export function ConfiguracoesPage() {
 
     try {
       setUsers(await listAdminUsers())
+      setAdminFunctionError(null)
     } catch (error) {
+      setUsers([])
+      setAdminFunctionError(
+        error instanceof Error
+          ? error.message
+          : 'Nao foi possivel acessar a funcao administrativa.',
+      )
       setMessage({
         type: 'error',
         text:
@@ -86,6 +108,10 @@ export function ConfiguracoesPage() {
     } finally {
       setIsLoadingUsers(false)
     }
+  }
+
+  function getAdminFunctionAlertText() {
+    return `A funcao administrativa admin-users precisa ser publicada ou esta inacessivel. Verifique a publicacao da Edge Function e a variavel SUPABASE_SERVICE_ROLE_KEY no ambiente da funcao. Detalhe: ${adminFunctionError}`
   }
 
   async function handleSendReset() {
@@ -373,20 +399,21 @@ export function ConfiguracoesPage() {
         )}
       </section>
 
-      <section className="mt-5 rounded border border-amber-200 bg-amber-50 p-5 text-amber-950 shadow-sm">
-        <div className="flex items-start gap-3">
-          <ShieldCheck className="mt-1 shrink-0" size={24} aria-hidden="true" />
-          <div>
-            <h2 className="text-xl font-semibold">Importante</h2>
-            <p className="mt-2 leading-7">
-              O e-mail marcosengroffm@gmail.com fica registrado como admin pela
-              migration. Para listar e excluir usuários, publique a Edge Function
-              admin-users e configure SUPABASE_SERVICE_ROLE_KEY somente no
-              ambiente da função.
-            </p>
+      {adminFunctionError && (
+        <section className="mt-5 rounded border border-amber-200 bg-amber-50 p-5 text-amber-950 shadow-sm">
+          <div className="flex items-start gap-3">
+            <ShieldCheck
+              className="mt-1 shrink-0"
+              size={24}
+              aria-hidden="true"
+            />
+            <div>
+              <h2 className="text-xl font-semibold">Funcao indisponivel</h2>
+              <p className="mt-2 leading-7">{getAdminFunctionAlertText()}</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </section>
   )
 }
