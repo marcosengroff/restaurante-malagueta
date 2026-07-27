@@ -9,28 +9,35 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FichaTecnicaItemForm } from '../components/FichaTecnicaItemForm'
+import { PratoForm } from '../components/PratoForm'
 import {
   deleteItemFichaTecnica,
   getFichaTecnica,
   listIngredientesParaFicha,
   saveItemFichaTecnica,
 } from '../services/fichaTecnicaService'
+import { listCategoriasPratosAtivas, savePrato } from '../services/pratosService'
+import type { CategoriaPrato } from '../types/categoriaPrato'
 import type {
   FichaTecnicaData,
   FichaTecnicaFormValues,
   IngredienteFicha,
   ItemFichaTecnica,
 } from '../types/fichaTecnica'
+import type { PratoFormValues } from '../types/prato'
 import { formatCurrency, formatNumber } from '../utils/formatters'
 
 export function FichaTecnicaPratoPage() {
   const { id } = useParams()
   const [data, setData] = useState<FichaTecnicaData | null>(null)
   const [ingredientes, setIngredientes] = useState<IngredienteFicha[]>([])
+  const [categoriasPratos, setCategoriasPratos] = useState<CategoriaPrato[]>([])
   const [editingItem, setEditingItem] = useState<ItemFichaTecnica | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [isPratoFormOpen, setIsPratoFormOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmittingPrato, setIsSubmittingPrato] = useState(false)
   const [message, setMessage] = useState<{
     type: 'success' | 'error'
     text: string
@@ -77,6 +84,14 @@ export function FichaTecnicaPratoPage() {
     loadFicha()
   }, [loadFicha])
 
+  useEffect(() => {
+    listCategoriasPratosAtivas()
+      .then(setCategoriasPratos)
+      .catch(() => {
+        setCategoriasPratos([])
+      })
+  }, [])
+
   async function handleSubmit(values: FichaTecnicaFormValues) {
     if (!id) {
       return
@@ -106,6 +121,35 @@ export function FichaTecnicaPratoPage() {
       })
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  async function handlePratoSubmit(values: PratoFormValues) {
+    if (!data) {
+      return
+    }
+
+    setIsSubmittingPrato(true)
+    setMessage(null)
+
+    try {
+      await savePrato(values, data.prato.id)
+      setMessage({
+        type: 'success',
+        text: 'Dados do prato atualizados com sucesso.',
+      })
+      setIsPratoFormOpen(false)
+      await loadFicha()
+    } catch (error) {
+      setMessage({
+        type: 'error',
+        text:
+          error instanceof Error
+            ? error.message
+            : 'Nao foi possivel atualizar os dados do prato.',
+      })
+    } finally {
+      setIsSubmittingPrato(false)
     }
   }
 
@@ -177,15 +221,25 @@ export function FichaTecnicaPratoPage() {
               {prato.descricao ?? 'Ficha tecnica do prato.'}
             </p>
           </div>
-          <span
-            className={`w-fit rounded px-2 py-1 text-xs font-semibold ${
-              prato.ativo
-                ? 'bg-emerald-50 text-emerald-700'
-                : 'bg-stone-100 text-slate-600'
-            }`}
-          >
-            {prato.ativo ? 'Ativo' : 'Inativo'}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center gap-2 rounded border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+              onClick={() => setIsPratoFormOpen(true)}
+            >
+              <Edit size={17} aria-hidden="true" />
+              Editar dados
+            </button>
+            <span
+              className={`w-fit rounded px-2 py-1 text-xs font-semibold ${
+                prato.ativo
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : 'bg-stone-100 text-slate-600'
+              }`}
+            >
+              {prato.ativo ? 'Ativo' : 'Inativo'}
+            </span>
+          </div>
         </div>
 
         <dl className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -413,6 +467,16 @@ export function FichaTecnicaPratoPage() {
             setEditingItem(null)
           }}
           onSubmit={handleSubmit}
+        />
+      )}
+
+      {isPratoFormOpen && (
+        <PratoForm
+          categorias={categoriasPratos}
+          prato={prato}
+          isSubmitting={isSubmittingPrato}
+          onCancel={() => setIsPratoFormOpen(false)}
+          onSubmit={handlePratoSubmit}
         />
       )}
     </section>

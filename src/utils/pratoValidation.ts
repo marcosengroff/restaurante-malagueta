@@ -1,5 +1,20 @@
 import { z } from 'zod'
 
+const nullablePositiveNumber = z.union([
+  z.number().positive('Informe um valor maior que zero.'),
+  z.nan().transform(() => null),
+  z.null(),
+])
+
+const nullablePositiveInteger = z.union([
+  z
+    .number()
+    .int('O tempo de preparo deve ser um numero inteiro.')
+    .positive('O tempo de preparo deve ser maior que zero.'),
+  z.nan().transform(() => null),
+  z.null(),
+])
+
 export const pratoSchema = z.object({
   nome: z
     .string()
@@ -15,15 +30,8 @@ export const pratoSchema = z.object({
   rendimento: z
     .number('Informe o rendimento.')
     .positive('O rendimento deve ser maior que zero.'),
-  peso_final: z
-    .number()
-    .positive('Informe um valor maior que zero.')
-    .nullable(),
-  tempo_preparo: z
-    .number()
-    .int('O tempo de preparo deve ser um numero inteiro.')
-    .positive('O tempo de preparo deve ser maior que zero.')
-    .nullable(),
+  peso_final: nullablePositiveNumber,
+  tempo_preparo: nullablePositiveInteger,
   observacoes: z.string().trim(),
   ativo: z.boolean(),
 })

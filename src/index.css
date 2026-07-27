@@ -52,7 +52,7 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #c62828 #151515;
+  scrollbar-color: #9f1f1f #d8dde3;
 }
 
 *::-webkit-scrollbar {
@@ -61,17 +61,17 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-  background: #151515;
+  background: #d8dde3;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #c62828;
-  border: 2px solid #151515;
+  background: #9f1f1f;
+  border: 2px solid #d8dde3;
   border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #d11f1f;
+  background: #c62828;
 }
 
 button,
