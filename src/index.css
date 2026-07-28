@@ -52,7 +52,7 @@ body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #9f1f1f #d8dde3;
+  scrollbar-color: #8f99a5 #d8dde3;
 }
 
 *::-webkit-scrollbar {
@@ -65,13 +65,35 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #9f1f1f;
+  background: #8f99a5;
   border: 2px solid #d8dde3;
   border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #c62828;
+  background: #7d8794;
+}
+
+.sidebar-scroll {
+  scrollbar-color: #6f2424 #111413;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #111413;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #6f2424;
+  border: 2px solid #111413;
+  border-radius: 999px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #8b2a2a;
 }
 
 button,

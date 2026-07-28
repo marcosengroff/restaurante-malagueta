@@ -1,4 +1,23 @@
-import { FileSpreadsheet, Gauge, LogOut, Menu, Settings, Soup, X } from 'lucide-react'
+import {
+  Beef,
+  CakeSlice,
+  ChefHat,
+  CookingPot,
+  Drumstick,
+  Fish,
+  Gauge,
+  IceCreamBowl,
+  LogOut,
+  Menu,
+  Pizza,
+  Salad,
+  Settings,
+  Soup,
+  Utensils,
+  Wheat,
+  X,
+  type LucideIcon,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAdminStatus } from '../hooks/useAdminStatus'
@@ -9,6 +28,59 @@ function formatMenuLabel(value: string) {
   return value
     .toLocaleLowerCase('pt-BR')
     .replace(/(^|\s|\.|-)(\p{L})/gu, (match) => match.toLocaleUpperCase('pt-BR'))
+}
+
+function normalizeMenuName(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLocaleLowerCase('pt-BR')
+}
+
+function getMenuIcon(value: string): LucideIcon {
+  const name = normalizeMenuName(value)
+
+  if (name.includes('pizza')) {
+    return Pizza
+  }
+
+  if (name.includes('frango') || name.includes('aves')) {
+    return Drumstick
+  }
+
+  if (name.includes('peixe')) {
+    return Fish
+  }
+
+  if (name.includes('bovino') || name.includes('file')) {
+    return Beef
+  }
+
+  if (name.includes('molho') || name.includes('acomp')) {
+    return CookingPot
+  }
+
+  if (name.includes('petisco')) {
+    return Utensils
+  }
+
+  if (name.includes('massa')) {
+    return Wheat
+  }
+
+  if (name.includes('sobremesa') || name.includes('doce')) {
+    return CakeSlice
+  }
+
+  if (name.includes('salada')) {
+    return Salad
+  }
+
+  if (name.includes('especial')) {
+    return ChefHat
+  }
+
+  return IceCreamBowl
 }
 
 export function MainLayout() {
@@ -76,7 +148,7 @@ export function MainLayout() {
 
         <nav className="relative z-10 mt-9 flex h-[calc(100vh-155px)] flex-col">
           <div className="min-h-0 flex-1">
-            <div className="max-h-full space-y-1 overflow-y-auto pr-1">
+            <div className="sidebar-scroll max-h-full space-y-1 overflow-y-auto pr-1">
               <SidebarLink
                 to="/painel"
                 icon={Gauge}
@@ -98,24 +170,29 @@ export function MainLayout() {
                 Ingredientes
               </NavLink>
 
-              {abasPlanilha.map((aba) => (
-                <NavLink
-                  key={aba.id}
-                  to={`/pratos?categoria=${aba.id}`}
-                  onClick={() => setIsSidebarOpen(false)}
-                  className={() =>
-                    `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
-                      location.pathname === '/pratos' &&
-                      new URLSearchParams(location.search).get('categoria') === aba.id
-                        ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-                        : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
-                    }`
-                  }
-                >
-                  <FileSpreadsheet size={17} aria-hidden="true" />
-                  <span className="truncate">{formatMenuLabel(aba.nome)}</span>
-                </NavLink>
-              ))}
+              {abasPlanilha.map((aba) => {
+                const MenuIcon = getMenuIcon(aba.nome)
+
+                return (
+                  <NavLink
+                    key={aba.id}
+                    to={`/pratos?categoria=${aba.id}`}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={() =>
+                      `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
+                        location.pathname === '/pratos' &&
+                        new URLSearchParams(location.search).get('categoria') ===
+                          aba.id
+                          ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
+                          : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
+                      }`
+                    }
+                  >
+                    <MenuIcon size={17} aria-hidden="true" />
+                    <span className="truncate">{formatMenuLabel(aba.nome)}</span>
+                  </NavLink>
+                )
+              })}
               {isAdmin && (
                 <SidebarLink
                   to="/configuracoes"
@@ -203,7 +280,7 @@ function SidebarLink({
   onClick,
 }: {
   to: string
-  icon: typeof Gauge
+  icon: LucideIcon
   label: string
   onClick: () => void
 }) {
