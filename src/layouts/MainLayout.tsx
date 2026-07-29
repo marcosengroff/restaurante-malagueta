@@ -10,6 +10,7 @@ import {
   LogOut,
   Menu,
   Pizza,
+  Plus,
   Salad,
   Settings,
   Soup,
@@ -91,6 +92,7 @@ export function MainLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const { isAdmin } = useAdminStatus()
+  const mobileTitle = getMobileTitle(location.pathname)
 
   useEffect(() => {
     listCategoriasPratosMenu()
@@ -225,19 +227,40 @@ export function MainLayout() {
       )}
 
       <div className="min-h-screen lg:pl-72">
-        <button
-          type="button"
-          className="fixed left-4 top-4 z-20 rounded border border-stone-200 bg-white p-2 text-slate-700 shadow-sm lg:hidden"
-          aria-label="Abrir menu"
-          onClick={() => setIsSidebarOpen(true)}
-        >
-          <Menu size={22} aria-hidden="true" />
-        </button>
+        <header className="fixed inset-x-0 top-0 z-20 border-b border-stone-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded border border-stone-200 text-slate-700"
+              aria-label="Abrir menu completo"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu size={22} aria-hidden="true" />
+            </button>
+            <div className="min-w-0 text-center">
+              <p className="truncate text-sm font-semibold text-slate-950">
+                {mobileTitle}
+              </p>
+              <p className="truncate text-xs font-medium text-slate-500">
+                Malaguetta
+              </p>
+            </div>
+            <button
+              type="button"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded bg-red-700 text-white shadow-sm"
+              aria-label="Novo prato"
+              onClick={() => navigate('/pratos')}
+            >
+              <Plus size={21} aria-hidden="true" />
+            </button>
+          </div>
+        </header>
 
-        <main className="px-4 py-6 pt-16 lg:px-8 lg:pt-6">
+        <main className="px-3 py-5 pt-20 pb-24 sm:px-4 lg:px-8 lg:pt-6 lg:pb-6">
           <Outlet />
         </main>
-        <footer className="px-4 pb-5 lg:px-8">
+        <MobileBottomNav />
+        <footer className="px-4 pb-24 lg:px-8 lg:pb-5">
           <div className="flex justify-end">
             <div className="text-center text-sm font-medium text-slate-500">
               <p>Desenvolvido por</p>
@@ -257,6 +280,48 @@ export function MainLayout() {
         </footer>
       </div>
     </div>
+  )
+}
+
+function getMobileTitle(pathname: string) {
+  if (pathname === '/painel') return 'Painel'
+  if (pathname === '/ingredientes') return 'Ingredientes'
+  if (pathname === '/categorias') return 'Categorias'
+  if (pathname === '/fichas-tecnicas') return 'Fichas tecnicas'
+  if (pathname === '/importacao') return 'Importacao'
+  if (pathname === '/configuracoes') return 'Configuracoes'
+  if (pathname === '/pratos') return 'Pratos'
+
+  return 'Restaurante Malaguetta'
+}
+
+function MobileBottomNav() {
+  const itemClass = ({ isActive }: { isActive: boolean }) =>
+    `flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded px-2 py-2 text-xs font-semibold transition ${
+      isActive ? 'text-red-700' : 'text-slate-500'
+    }`
+
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-200 bg-white/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden">
+      <div className="mx-auto flex max-w-md items-center justify-around gap-1">
+        <NavLink to="/painel" className={itemClass}>
+          <Gauge size={20} aria-hidden="true" />
+          <span>Painel</span>
+        </NavLink>
+        <NavLink to="/ingredientes" className={itemClass}>
+          <Soup size={20} aria-hidden="true" />
+          <span>Insumos</span>
+        </NavLink>
+        <NavLink to="/pratos" className={itemClass}>
+          <Utensils size={20} aria-hidden="true" />
+          <span>Pratos</span>
+        </NavLink>
+        <NavLink to="/fichas-tecnicas" className={itemClass}>
+          <ChefHat size={20} aria-hidden="true" />
+          <span>Fichas</span>
+        </NavLink>
+      </div>
+    </nav>
   )
 }
 

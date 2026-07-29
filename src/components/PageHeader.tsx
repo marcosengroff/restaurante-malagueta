@@ -5,9 +5,11 @@ type PageHeaderProps = {
 
 export function PageHeader({ title, description }: PageHeaderProps) {
   return (
-    <div className="mb-6">
-      <h2 className="text-2xl font-semibold text-slate-950">{title}</h2>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+    <div className="mb-5 sm:mb-6">
+      <h2 className="text-xl font-semibold text-slate-950 sm:text-2xl">
+        {title}
+      </h2>
+      <p className="mt-1.5 max-w-3xl text-sm leading-6 text-slate-600 sm:mt-2">
         {description}
       </p>
     </div>

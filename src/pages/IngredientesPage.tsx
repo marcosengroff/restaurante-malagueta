@@ -449,7 +449,69 @@ export function IngredientesPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
+                  <>
+                  <div className="divide-y divide-stone-100 sm:hidden">
+                    {ingredientesDaCategoriaSelecionada.map((ing) => (
+                      <div
+                        key={ing.id}
+                        className={`p-4 ${!ing.ativo ? 'opacity-60' : ''}`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="break-words text-base font-semibold text-slate-950">
+                                {ing.nome}
+                              </h4>
+                              {!ing.ativo && (
+                                <span className="shrink-0 rounded bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-slate-500">
+                                  Inativo
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-sm font-medium text-slate-500">
+                              {ing.unidade_compra}
+                            </p>
+                            <p className="mt-2 text-base font-semibold text-slate-950">
+                              {formatCurrency(ing.preco_embalagem)}
+                              <span className="ml-1 text-sm font-medium text-slate-400">
+                                /{ing.quantidade_embalagem}
+                                {ing.unidade_compra}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 gap-1">
+                            <button
+                              type="button"
+                              className="rounded p-2 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                              aria-label={`Editar ${ing.nome}`}
+                              title="Editar"
+                              onClick={() => openEditForm(ing)}
+                            >
+                              <Edit size={17} aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded p-2 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                              aria-label={
+                                ing.ativo
+                                  ? `Desativar ${ing.nome}`
+                                  : `Reativar ${ing.nome}`
+                              }
+                              title={ing.ativo ? 'Desativar' : 'Reativar'}
+                              onClick={() => handleToggleAtivo(ing)}
+                            >
+                              {ing.ativo ? (
+                                <XCircle size={17} aria-hidden="true" />
+                              ) : (
+                                <RotateCcw size={17} aria-hidden="true" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="hidden overflow-x-auto sm:block">
                     <table className="w-full min-w-[500px] border-collapse text-left text-base">
                       <thead className="bg-stone-50 text-sm uppercase text-slate-500">
                         <tr>
@@ -536,6 +598,7 @@ export function IngredientesPage() {
                       </tbody>
                     </table>
                   </div>
+                  </>
                 )}
               </>
             ) : selectedCategoryId === 'sem-categoria' ? (
@@ -566,7 +629,71 @@ export function IngredientesPage() {
                   </button>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="divide-y divide-stone-100 sm:hidden">
+                  {(ingredientesPorCategoria.get('sem-categoria') ?? []).map(
+                    (ing) => (
+                      <div
+                        key={ing.id}
+                        className={`p-4 ${!ing.ativo ? 'opacity-60' : ''}`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="break-words text-base font-semibold text-slate-950">
+                                {ing.nome}
+                              </h4>
+                              {!ing.ativo && (
+                                <span className="shrink-0 rounded bg-stone-100 px-1.5 py-0.5 text-xs font-medium text-slate-500">
+                                  Inativo
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-sm font-medium text-slate-500">
+                              {ing.unidade_compra}
+                            </p>
+                            <p className="mt-2 text-base font-semibold text-slate-950">
+                              {formatCurrency(ing.preco_embalagem)}
+                              <span className="ml-1 text-sm font-medium text-slate-400">
+                                /{ing.quantidade_embalagem}
+                                {ing.unidade_compra}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 gap-1">
+                            <button
+                              type="button"
+                              className="rounded p-2 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                              aria-label={`Editar ${ing.nome}`}
+                              title="Editar"
+                              onClick={() => openEditForm(ing)}
+                            >
+                              <Edit size={17} aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded p-2 text-slate-500 hover:bg-stone-100 hover:text-slate-700"
+                              aria-label={
+                                ing.ativo
+                                  ? `Desativar ${ing.nome}`
+                                  : `Reativar ${ing.nome}`
+                              }
+                              title={ing.ativo ? 'Desativar' : 'Reativar'}
+                              onClick={() => handleToggleAtivo(ing)}
+                            >
+                              {ing.ativo ? (
+                                <XCircle size={17} aria-hidden="true" />
+                              ) : (
+                                <RotateCcw size={17} aria-hidden="true" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+
+                <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full min-w-[500px] border-collapse text-left text-base">
                     <thead className="bg-stone-50 text-sm uppercase text-slate-500">
                       <tr>

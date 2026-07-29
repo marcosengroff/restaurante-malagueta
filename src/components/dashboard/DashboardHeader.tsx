@@ -44,14 +44,14 @@ export function DashboardHeader() {
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <h1 className="text-3xl font-semibold text-slate-950">
+        <h1 className="text-2xl font-semibold text-slate-950 sm:text-3xl">
           {getGreeting()}, {displayName}
         </h1>
         <p className="mt-2 text-sm text-slate-600">
           Bem-vindo ao painel de controle das fichas tecnicas.
         </p>
       </div>
-      <div className="rounded border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm">
+      <div className="w-full rounded border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm sm:w-auto">
         {new Intl.DateTimeFormat('pt-BR', {
           weekday: 'long',
           day: '2-digit',
