@@ -249,7 +249,7 @@ export function IngredientesPage() {
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <PageHeader
           title="Ingredientes"
-          description="Cadastre e acompanhe os insumos usados nas fichas tecnicas, mantendo unidades e custos alinhados ao calculo da planilha."
+          description="Cadastre e acompanhe os insumos usados nas fichas tecnicas, mantendo unidades e custos alinhados."
         />
         <button
           type="button"

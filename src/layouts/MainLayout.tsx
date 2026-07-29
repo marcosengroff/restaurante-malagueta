@@ -261,9 +261,9 @@ export function MainLayout() {
         </main>
         <MobileBottomNav />
         <footer className="px-4 pb-24 lg:px-8 lg:pb-5">
-          <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500">
+          <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500/55">
             <span>Versão 1.0.0</span>
-            <span className="h-7 w-px bg-stone-300" />
+            <span className="h-7 w-px bg-stone-300/60" />
             <div className="flex items-center gap-4">
               <p>Desenvolvido por Marcos Engroff</p>
               <a
@@ -272,7 +272,7 @@ export function MainLayout() {
                 rel="noopener noreferrer"
                 title="Fale comigo no WhatsApp"
                 aria-label="Fale comigo no WhatsApp"
-                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.30)] ring-4 ring-white transition-transform duration-200 hover:scale-110"
+                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#25D366]/80 text-white/90 shadow-[0_10px_24px_rgba(37,211,102,0.18)] ring-4 ring-white/70 transition duration-200 hover:scale-110 hover:bg-[#25D366] hover:text-white"
               >
                 <WhatsAppIcon />
               </a>

@@ -212,7 +212,7 @@ export function PratosPage() {
           title={categoriaSelecionada?.nome ?? 'Pratos'}
           description={
             categoriaSelecionada
-              ? 'Conteudo importado desta aba da planilha. Abra a ficha tecnica para preencher quantidades e calcular custos.'
+              ? 'Abra a ficha tecnica para preencher quantidades e calcular custos.'
               : 'Cadastre os pratos utilizados pelo restaurante.'
           }
         />
