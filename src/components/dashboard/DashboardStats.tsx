@@ -92,22 +92,28 @@ export function DashboardStats({
     },
   ]
 
+  const visibleItems = items.filter(
+    (item) =>
+      item.label !== 'Fichas incompletas' &&
+      item.label !== 'Ultima atualizacao',
+  )
+
   return (
-    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-      {items.map((item) => {
+    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {visibleItems.map((item) => {
         const Icon = item.icon
         const content = (
           <>
             <span className={`absolute left-0 top-1/2 h-9 w-1 -translate-y-1/2 rounded-r-full ${item.accent}`} />
             <div className="flex items-start gap-4">
-              <span className={`inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
-                <Icon size={30} strokeWidth={1.9} aria-hidden="true" />
+              <span className={`inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
+                <Icon size={28} strokeWidth={1.9} aria-hidden="true" />
               </span>
               <div className="min-w-0 pt-1">
-                <p className="text-[11px] font-bold uppercase tracking-[0.02em] text-slate-700">
+                <p className="text-[10px] font-bold uppercase leading-4 tracking-[0.02em] text-slate-700">
                 {item.label}
                 </p>
-                <p className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
+                <p className="mt-4 text-3xl font-bold tracking-tight text-slate-950">
                   {item.value}
                 </p>
                 {item.growth && (
@@ -135,7 +141,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="malaguetta-card group relative min-h-44 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-6 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(58,35,20,0.18)]"
+              className="group relative min-h-40 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-5 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(58,35,20,0.18)]"
             >
               {content}
             </Link>
@@ -145,7 +151,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="malaguetta-card relative min-h-44 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-6 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur"
+            className="relative min-h-40 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-5 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur"
           >
             {content}
           </div>
@@ -157,8 +163,8 @@ export function DashboardStats({
 
 export function DashboardStatsSkeleton() {
   return (
-    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-      {Array.from({ length: 6 }).map((_, index) => (
+    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
           className="h-32 animate-pulse rounded-lg border border-stone-200 bg-white p-4 shadow-sm"

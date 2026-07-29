@@ -164,7 +164,7 @@ export function MainLayout() {
                   `flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold transition ${
                     isActive
                       ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
-                      : 'text-white/76 hover:bg-white/8 hover:text-white'
+                      : 'text-white/76 hover:bg-[#C62828]/18 hover:text-white'
                   }`
                 }
               >
@@ -186,7 +186,7 @@ export function MainLayout() {
                         new URLSearchParams(location.search).get('categoria') ===
                           aba.id
                           ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
-                          : 'text-white/76 hover:bg-white/8 hover:text-white'
+                          : 'text-white/76 hover:bg-[#C62828]/18 hover:text-white'
                       }`
                     }
                   >
@@ -358,7 +358,7 @@ function SidebarLink({
         `flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold transition ${
           isActive
             ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
-            : 'text-white/76 hover:bg-white/8 hover:text-white'
+            : 'text-white/76 hover:bg-[#C62828]/18 hover:text-white'
         }`
       }
     >

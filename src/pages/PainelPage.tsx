@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DashboardFooter } from '../components/dashboard/DashboardFooter'
 import { DashboardHeader } from '../components/dashboard/DashboardHeader'
-import { DashboardSearch } from '../components/dashboard/DashboardSearch'
 import {
   DashboardStats,
   DashboardStatsSkeleton,
@@ -53,7 +52,6 @@ export function PainelPage() {
             stats={data.stats}
             primeiraFichaIncompletaId={data.pendingRecipes[0]?.id}
           />
-          <DashboardSearch items={data.searchItems} />
           <QuickActions />
 
           {data.stats.totalPratos === 0 ? (
