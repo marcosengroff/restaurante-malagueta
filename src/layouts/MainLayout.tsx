@@ -226,7 +226,7 @@ export function MainLayout() {
         />
       )}
 
-      <div className="min-h-screen lg:pl-72">
+      <div className="flex min-h-screen flex-col lg:pl-72">
         <header className="fixed inset-x-0 top-0 z-20 border-b border-stone-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
           <div className="flex items-center justify-between gap-3">
             <button
@@ -256,12 +256,12 @@ export function MainLayout() {
           </div>
         </header>
 
-        <main className="px-3 py-5 pt-20 pb-24 sm:px-4 lg:px-8 lg:pt-6 lg:pb-6">
+        <main className="flex-1 px-3 py-5 pt-20 pb-24 sm:px-4 lg:px-8 lg:pt-6 lg:pb-6">
           <Outlet />
         </main>
         <MobileBottomNav />
-        <footer className="px-4 pb-24 lg:px-8 lg:pb-5">
-          <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500/55">
+        <footer className="mt-auto px-4 pb-24 lg:px-8 lg:pb-5">
+          <div className="flex items-center justify-start gap-7 text-sm font-medium text-slate-500/55">
             <span>Versão 1.0.0</span>
             <span className="h-7 w-px bg-stone-300/60" />
             <div className="flex items-center gap-4">
