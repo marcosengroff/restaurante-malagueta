@@ -243,3 +243,14 @@ export async function deleteItemFichaTecnica(itemId: string) {
     throw new Error(getFriendlyError(error.message))
   }
 }
+
+export async function deleteFichaTecnicaByPrato(pratoId: string) {
+  const { error } = await supabase
+    .from('itens_ficha_tecnica')
+    .delete()
+    .eq('prato_id', pratoId)
+
+  if (error) {
+    throw new Error(getFriendlyError(error.message))
+  }
+}

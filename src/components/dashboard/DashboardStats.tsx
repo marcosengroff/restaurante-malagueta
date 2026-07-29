@@ -58,9 +58,7 @@ export function DashboardStats({
             icon: AlertTriangle,
             tone: 'bg-orange-50 text-orange-700',
             accent: 'bg-orange-500',
-            to: primeiraFichaIncompletaId
-              ? `/pratos/${primeiraFichaIncompletaId}/ficha-tecnica`
-              : undefined,
+            to: primeiraFichaIncompletaId ? '/fichas-tecnicas' : undefined,
           },
         ]
       : []),
