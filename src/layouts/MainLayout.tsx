@@ -261,7 +261,7 @@ export function MainLayout() {
         </main>
         <MobileBottomNav />
         <footer className="mt-auto px-4 pb-24 lg:px-8 lg:pb-5">
-          <div className="flex items-center justify-start gap-7 text-sm font-medium text-slate-500/55">
+          <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500/55">
             <span>Versão 1.0.0</span>
             <span className="h-7 w-px bg-stone-300/60" />
             <div className="flex items-center gap-4">
