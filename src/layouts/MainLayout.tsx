@@ -115,19 +115,19 @@ export function MainLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#d8dde3] text-slate-900">
+    <div className="min-h-screen bg-[#f4eee7] text-slate-900">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 overflow-hidden bg-[#111413] px-4 py-6 text-white shadow-2xl transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 overflow-hidden border-r border-red-900/35 bg-[#0f100f] px-5 py-7 text-white shadow-2xl transition-transform duration-200 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[radial-gradient(circle_at_bottom_left,rgba(198,40,40,0.22),transparent_48%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-[radial-gradient(circle_at_bottom_left,rgba(198,40,40,0.24),transparent_46%),linear-gradient(180deg,transparent,rgba(93,18,13,0.26))]" />
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img
               src="/logo-pimenta.png"
               alt="Restaurante Malaguetta"
-              className="h-9 w-auto max-w-20 object-contain"
+              className="h-10 w-auto max-w-20 object-contain drop-shadow"
             />
             <div>
               <p className="text-2xl font-bold leading-none tracking-tight text-white">
@@ -148,9 +148,9 @@ export function MainLayout() {
           </button>
         </div>
 
-        <nav className="relative z-10 mt-9 flex h-[calc(100vh-155px)] flex-col">
+        <nav className="relative z-10 mt-10 flex h-[calc(100vh-164px)] flex-col">
           <div className="min-h-0 flex-1">
-            <div className="sidebar-scroll max-h-full space-y-1 overflow-y-auto pr-1">
+            <div className="sidebar-scroll max-h-full space-y-1.5 overflow-y-auto pr-1">
               <SidebarLink
                 to="/painel"
                 icon={Gauge}
@@ -161,14 +161,14 @@ export function MainLayout() {
                 to="/ingredientes"
                 onClick={() => setIsSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
+                  `flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold transition ${
                     isActive
-                      ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-                      : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
+                      ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
+                      : 'text-white/76 hover:bg-white/8 hover:text-white'
                   }`
                 }
               >
-                <Soup size={17} aria-hidden="true" />
+                <Soup size={19} aria-hidden="true" />
                 Ingredientes
               </NavLink>
 
@@ -181,16 +181,16 @@ export function MainLayout() {
                     to={`/pratos?categoria=${aba.id}`}
                     onClick={() => setIsSidebarOpen(false)}
                     className={() =>
-                      `flex items-center gap-3 rounded px-3 py-2.5 text-base font-medium transition ${
+                      `flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold transition ${
                         location.pathname === '/pratos' &&
                         new URLSearchParams(location.search).get('categoria') ===
                           aba.id
-                          ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-                          : 'text-white/72 hover:bg-[#C62828]/18 hover:text-white'
+                          ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
+                          : 'text-white/76 hover:bg-white/8 hover:text-white'
                       }`
                     }
                   >
-                    <MenuIcon size={17} aria-hidden="true" />
+                    <MenuIcon size={19} aria-hidden="true" />
                     <span className="truncate">{formatMenuLabel(aba.nome)}</span>
                   </NavLink>
                 )
@@ -208,7 +208,7 @@ export function MainLayout() {
 
           <button
             type="button"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded border border-white/12 bg-white/5 px-3 py-2 text-base font-semibold text-white/78 hover:bg-white/10 hover:text-white"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/7 px-3 py-3 text-base font-semibold text-white/82 shadow-inner hover:bg-white/12 hover:text-white"
             onClick={handleSignOut}
           >
             <LogOut size={16} aria-hidden="true" />
@@ -261,17 +261,18 @@ export function MainLayout() {
         </main>
         <MobileBottomNav />
         <footer className="px-4 pb-24 lg:px-8 lg:pb-5">
-          <div className="flex justify-end">
-            <div className="text-center text-sm font-medium text-slate-500">
-              <p>Desenvolvido por</p>
-              <p>Marcos Engroff</p>
+          <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500">
+            <span>Versão 1.0.0</span>
+            <span className="h-7 w-px bg-stone-300" />
+            <div className="flex items-center gap-4">
+              <p>Desenvolvido por Marcos Engroff</p>
               <a
                 href="https://wa.me/55999634642?text=Olá,%20Marcos!%20Estou%20utilizando%20o%20Restaurante%20Malaguetta%20e%20gostaria%20de%20falar%20com%20você."
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Fale comigo no WhatsApp"
                 aria-label="Fale comigo no WhatsApp"
-                className="mt-1 inline-flex cursor-pointer items-center justify-center text-[#25D366] transition-transform duration-200 hover:scale-110"
+                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.30)] ring-4 ring-white transition-transform duration-200 hover:scale-110"
               >
                 <WhatsAppIcon />
               </a>
@@ -354,14 +355,14 @@ function SidebarLink({
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
-        `flex items-center gap-3 rounded px-3 py-2 text-base font-medium transition ${
+        `flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold transition ${
           isActive
-            ? 'bg-[#C62828] text-white shadow-lg shadow-red-950/25'
-            : 'text-white/70 hover:bg-[#C62828]/18 hover:text-white'
+            ? 'bg-gradient-to-r from-[#E02D2D] to-[#B9151A] text-white shadow-[0_12px_28px_rgba(198,40,40,0.34)]'
+            : 'text-white/76 hover:bg-white/8 hover:text-white'
         }`
       }
     >
-      <Icon size={16} aria-hidden="true" />
+      <Icon size={19} aria-hidden="true" />
       {label}
     </NavLink>
   )

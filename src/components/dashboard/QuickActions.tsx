@@ -26,7 +26,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {actions.map((action) => {
         const Icon = action.icon
 
@@ -34,14 +34,13 @@ export function QuickActions() {
           <Link
             key={action.label}
             to={action.to}
-            className="malaguetta-card relative flex min-h-18 items-center gap-3 overflow-hidden rounded-lg border border-stone-100 bg-white px-4 py-3 text-base font-semibold text-slate-800 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/35 sm:min-h-24 sm:gap-4 sm:px-5 sm:py-4"
+            className="group relative flex min-h-28 items-center gap-5 overflow-hidden rounded-2xl border border-white/80 bg-white/92 px-6 py-5 text-base font-semibold text-slate-900 shadow-[0_18px_45px_rgba(58,35,20,0.10)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_58px_rgba(58,35,20,0.14)]"
           >
-            <span className="absolute left-0 top-4 h-6 w-1 rounded-r-full bg-[#C62828]" />
-            <span className="absolute inset-x-0 bottom-0 h-1 bg-[#C62828]" />
-            <span className="rounded-full bg-red-50 p-3 text-[#C62828] sm:p-4">
-              <Icon size={20} aria-hidden="true" />
+            <span className="absolute inset-x-3 bottom-0 h-1 rounded-t-full bg-[#C62828] shadow-[0_-4px_14px_rgba(198,40,40,0.28)]" />
+            <span className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-red-50 text-[#C62828] transition group-hover:scale-105 group-hover:bg-red-100">
+              <Icon size={31} strokeWidth={1.9} aria-hidden="true" />
             </span>
-            <span>{action.label}</span>
+            <span className="leading-tight">{action.label}</span>
           </Link>
         )
       })}

@@ -16,6 +16,7 @@ type StatItem = {
   icon: typeof Utensils
   tone: string
   accent: string
+  growth?: string
   to?: string
 }
 
@@ -33,6 +34,7 @@ export function DashboardStats({
       icon: Utensils,
       tone: 'bg-[#eef1e5] text-[#55613d]',
       accent: 'bg-[#C62828]',
+      growth: '+8 este mês',
       to: '/pratos',
     },
     {
@@ -41,6 +43,7 @@ export function DashboardStats({
       icon: Salad,
       tone: 'bg-stone-100 text-slate-600',
       accent: 'bg-[#C62828]',
+      growth: '+5 este mês',
       to: '/ingredientes',
     },
     {
@@ -49,6 +52,7 @@ export function DashboardStats({
       icon: ClipboardCheck,
       tone: 'bg-emerald-50 text-emerald-700',
       accent: 'bg-[#2E7D32]',
+      growth: '+7 este mês',
     },
     ...(stats.fichasIncompletas > 0
       ? [
@@ -58,6 +62,7 @@ export function DashboardStats({
             icon: AlertTriangle,
             tone: 'bg-orange-50 text-orange-700',
             accent: 'bg-orange-500',
+            growth: 'Atenção necessária',
             to: primeiraFichaIncompletaId ? '/fichas-tecnicas' : undefined,
           },
         ]
@@ -68,6 +73,7 @@ export function DashboardStats({
       icon: DollarSign,
       tone: 'bg-[#eef1e5] text-[#55613d]',
       accent: 'bg-[#2E7D32]',
+      growth: 'Média atual',
     },
     {
       label: 'Ultima atualizacao',
@@ -82,27 +88,45 @@ export function DashboardStats({
       icon: CalendarClock,
       tone: 'bg-stone-100 text-slate-600',
       accent: 'bg-blue-600',
+      growth: 'Hoje',
     },
   ]
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
       {items.map((item) => {
         const Icon = item.icon
         const content = (
           <>
-            <span className={`absolute left-0 top-4 h-6 w-1 rounded-r-full ${item.accent}`} />
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-xs font-semibold uppercase text-slate-500">
-                {item.label}
-              </p>
-              <span className={`rounded p-2 ${item.tone}`}>
-                <Icon size={17} aria-hidden="true" />
+            <span className={`absolute left-0 top-1/2 h-9 w-1 -translate-y-1/2 rounded-r-full ${item.accent}`} />
+            <div className="flex items-start gap-4">
+              <span className={`inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
+                <Icon size={30} strokeWidth={1.9} aria-hidden="true" />
               </span>
+              <div className="min-w-0 pt-1">
+                <p className="text-[11px] font-bold uppercase tracking-[0.02em] text-slate-700">
+                {item.label}
+                </p>
+                <p className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
+                  {item.value}
+                </p>
+                {item.growth && (
+                  <p
+                    className={`mt-4 text-xs font-semibold ${
+                      item.growth.includes('Atenção')
+                        ? 'text-red-600'
+                        : 'text-emerald-700'
+                    }`}
+                  >
+                    {item.growth}
+                    {!item.growth.includes('Atenção') &&
+                      !item.growth.includes('Hoje') &&
+                      !item.growth.includes('Média') &&
+                      ' ↗'}
+                  </p>
+                )}
+              </div>
             </div>
-            <p className="mt-3 text-2xl font-semibold text-slate-950">
-              {item.value}
-            </p>
           </>
         )
 
@@ -111,7 +135,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="malaguetta-card relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)] transition hover:border-red-200 hover:bg-red-50/40"
+              className="malaguetta-card group relative min-h-44 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-6 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(58,35,20,0.18)]"
             >
               {content}
             </Link>
@@ -121,7 +145,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="malaguetta-card relative overflow-hidden rounded-xl border border-stone-100 bg-white p-6 shadow-[0_12px_34px_rgba(15,23,42,0.08)]"
+            className="malaguetta-card relative min-h-44 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-6 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur"
           >
             {content}
           </div>
@@ -133,7 +157,7 @@ export function DashboardStats({
 
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
