@@ -227,11 +227,11 @@ export function MainLayout() {
       )}
 
       <div className="flex min-h-screen flex-col lg:pl-72">
-        <header className="fixed inset-x-0 top-0 z-20 border-b border-stone-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+        <header className="fixed inset-x-0 top-0 z-20 border-b border-stone-200 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur lg:hidden">
           <div className="flex items-center justify-between gap-3">
             <button
               type="button"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded border border-stone-200 text-slate-700"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-stone-200 text-slate-700"
               aria-label="Abrir menu completo"
               onClick={() => setIsSidebarOpen(true)}
             >
@@ -247,7 +247,7 @@ export function MainLayout() {
             </div>
             <button
               type="button"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded bg-red-700 text-white shadow-sm"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm"
               aria-label="Novo prato"
               onClick={() => navigate('/pratos')}
             >
@@ -256,11 +256,11 @@ export function MainLayout() {
           </div>
         </header>
 
-        <main className="flex-1 px-3 py-5 pt-20 pb-24 sm:px-4 lg:px-8 lg:pt-6 lg:pb-6">
+        <main className="flex-1 px-3 py-4 pt-16 pb-24 sm:px-4 lg:px-8 lg:pt-6 lg:pb-6">
           <Outlet />
         </main>
         <MobileBottomNav />
-        <footer className="mt-auto px-4 pb-24 lg:px-8 lg:pb-5">
+        <footer className="mt-auto hidden px-4 pb-24 lg:block lg:px-8 lg:pb-5">
           <div className="flex items-center justify-end gap-7 text-sm font-medium text-slate-500/55">
             <span>Versão 1.0.0</span>
             <span className="h-7 w-px bg-stone-300/60" />

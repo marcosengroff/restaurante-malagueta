@@ -99,26 +99,26 @@ export function DashboardStats({
   )
 
   return (
-    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="relative z-10 -mt-12 grid gap-3 sm:-mt-16 sm:grid-cols-2 sm:gap-4 lg:-mt-20 lg:grid-cols-4">
       {visibleItems.map((item) => {
         const Icon = item.icon
         const content = (
           <>
             <span className={`absolute left-0 top-1/2 h-9 w-1 -translate-y-1/2 rounded-r-full ${item.accent}`} />
-            <div className="flex items-start gap-4">
-              <span className={`inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
-                <Icon size={28} strokeWidth={1.9} aria-hidden="true" />
+            <div className="flex items-center gap-4 sm:items-start">
+              <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full sm:h-14 sm:w-14 ${item.tone}`}>
+                <Icon size={24} strokeWidth={1.9} aria-hidden="true" />
               </span>
-              <div className="min-w-0 pt-1">
+              <div className="min-w-0 sm:pt-1">
                 <p className="text-[10px] font-bold uppercase leading-4 tracking-[0.02em] text-slate-700">
-                {item.label}
+                  {item.label}
                 </p>
-                <p className="mt-4 text-3xl font-bold tracking-tight text-slate-950">
+                <p className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:mt-4 sm:text-3xl">
                   {item.value}
                 </p>
                 {item.growth && (
                   <p
-                    className={`mt-4 text-xs font-semibold ${
+                    className={`mt-2 text-xs font-semibold sm:mt-4 ${
                       item.growth.includes('Atenção')
                         ? 'text-red-600'
                         : 'text-emerald-700'
@@ -141,7 +141,7 @@ export function DashboardStats({
             <Link
               key={item.label}
               to={item.to}
-              className="group relative min-h-40 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-5 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(58,35,20,0.18)]"
+              className="group relative min-h-28 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-4 shadow-[0_18px_42px_rgba(58,35,20,0.12)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_28px_60px_rgba(58,35,20,0.18)] sm:min-h-40 sm:p-5"
             >
               {content}
             </Link>
@@ -151,7 +151,7 @@ export function DashboardStats({
         return (
           <div
             key={item.label}
-            className="relative min-h-40 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-5 shadow-[0_22px_50px_rgba(58,35,20,0.14)] backdrop-blur"
+            className="relative min-h-28 overflow-hidden rounded-2xl border border-white/80 bg-white/92 p-4 shadow-[0_18px_42px_rgba(58,35,20,0.12)] backdrop-blur sm:min-h-40 sm:p-5"
           >
             {content}
           </div>
@@ -163,7 +163,7 @@ export function DashboardStats({
 
 export function DashboardStatsSkeleton() {
   return (
-    <div className="relative z-10 -mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="relative z-10 -mt-12 grid gap-3 sm:-mt-16 sm:grid-cols-2 sm:gap-4 lg:-mt-20 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
