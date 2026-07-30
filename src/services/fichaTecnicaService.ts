@@ -5,6 +5,7 @@ import type {
   IngredienteFicha,
   ItemFichaTecnica,
 } from '../types/fichaTecnica'
+import { invalidateDashboardCache } from './dashboardService'
 
 function getFriendlyError(message: string) {
   if (message.includes('itens_ficha_tecnica_prato_ingrediente_unique')) {
@@ -231,6 +232,8 @@ export async function saveItemFichaTecnica(
   if (response.error) {
     throw new Error(getFriendlyError(response.error.message))
   }
+
+  invalidateDashboardCache()
 }
 
 export async function deleteItemFichaTecnica(itemId: string) {
@@ -242,6 +245,8 @@ export async function deleteItemFichaTecnica(itemId: string) {
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  invalidateDashboardCache()
 }
 
 export async function deleteFichaTecnicaByPrato(pratoId: string) {
@@ -253,4 +258,6 @@ export async function deleteFichaTecnicaByPrato(pratoId: string) {
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  invalidateDashboardCache()
 }

@@ -1,10 +1,26 @@
 import { supabase } from './supabaseClient'
 import type {
+  CategoriaPrato,
   CategoriaPratoFilters,
   CategoriaPratoFormValues,
   CategoriaPratoListResult,
 } from '../types/categoriaPrato'
 import { normalizeNome } from '../utils/ingredientes'
+import { invalidateCategoriasPratosAtivasCache } from './pratosService'
+
+const cacheTtlMs = 60_000
+type CategoriaPratoMenu = Pick<
+  CategoriaPrato,
+  'id' | 'nome' | 'ordem_exibicao' | 'ativo'
+>
+let menuCache: { data: CategoriaPratoMenu[]; expiresAt: number } | null = null
+let menuPromise: Promise<CategoriaPratoMenu[]> | null = null
+
+function clearCategoriasPratosCache() {
+  menuCache = null
+  menuPromise = null
+  invalidateCategoriasPratosAtivasCache()
+}
 
 function getFriendlyError(message: string) {
   if (message.includes('categorias_pratos_nome_unique')) {
@@ -25,21 +41,23 @@ function getFriendlyError(message: string) {
 async function countPratosAtivosByCategoria(categoriaIds: string[]) {
   const counts = new Map<string, number>()
 
-  await Promise.all(
-    categoriaIds.map(async (categoriaId) => {
-      const { count, error } = await supabase
-        .from('pratos')
-        .select('id', { count: 'exact', head: true })
-        .eq('categoria_id', categoriaId)
-        .eq('ativo', true)
+  if (categoriaIds.length === 0) {
+    return counts
+  }
 
-      if (error) {
-        throw new Error(getFriendlyError(error.message))
-      }
+  const { data, error } = await supabase
+    .from('pratos')
+    .select('categoria_id')
+    .eq('ativo', true)
+    .in('categoria_id', categoriaIds)
 
-      counts.set(categoriaId, count ?? 0)
-    }),
-  )
+  if (error) {
+    throw new Error(getFriendlyError(error.message))
+  }
+
+  ;(data ?? []).forEach((prato) => {
+    counts.set(prato.categoria_id, (counts.get(prato.categoria_id) ?? 0) + 1)
+  })
 
   return counts
 }
@@ -133,6 +151,8 @@ export async function saveCategoriaPrato(
   if (response.error) {
     throw new Error(getFriendlyError(response.error.message))
   }
+
+  clearCategoriasPratosCache()
 }
 
 export async function setCategoriaPratoAtivo(id: string, ativo: boolean) {
@@ -144,9 +164,27 @@ export async function setCategoriaPratoAtivo(id: string, ativo: boolean) {
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  clearCategoriasPratosCache()
 }
 
-export async function listCategoriasPratosMenu() {
+export async function listCategoriasPratosMenu(): Promise<CategoriaPratoMenu[]> {
+  if (menuCache && menuCache.expiresAt > Date.now()) {
+    return menuCache.data
+  }
+
+  if (menuPromise) {
+    return menuPromise
+  }
+
+  menuPromise = listCategoriasPratosMenuFromSupabase().finally(() => {
+    menuPromise = null
+  })
+
+  return menuPromise
+}
+
+async function listCategoriasPratosMenuFromSupabase(): Promise<CategoriaPratoMenu[]> {
   const { data, error } = await supabase
     .from('categorias_pratos')
     .select('id, nome, ordem_exibicao, ativo')
@@ -158,5 +196,11 @@ export async function listCategoriasPratosMenu() {
     throw new Error(getFriendlyError(error.message))
   }
 
-  return data ?? []
+  const result: CategoriaPratoMenu[] = data ?? []
+  menuCache = {
+    data: result,
+    expiresAt: Date.now() + cacheTtlMs,
+  }
+
+  return result
 }

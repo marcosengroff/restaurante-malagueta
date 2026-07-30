@@ -8,6 +8,18 @@ import type {
   PratoListResult,
 } from '../types/prato'
 import { normalizeNome } from '../utils/ingredientes'
+import { invalidateDashboardCache } from './dashboardService'
+
+const categoriasCacheTtlMs = 60_000
+let categoriasAtivasCache:
+  | { data: CategoriaPrato[]; expiresAt: number }
+  | null = null
+let categoriasAtivasPromise: Promise<CategoriaPrato[]> | null = null
+
+export function invalidateCategoriasPratosAtivasCache() {
+  categoriasAtivasCache = null
+  categoriasAtivasPromise = null
+}
 
 type PratoRowWithCategoria = DatabasePratoRow & {
   categorias_pratos: Pick<CategoriaPrato, 'id' | 'nome' | 'codigo' | 'ativo'> | null
@@ -55,6 +67,22 @@ function mapPrato(row: PratoRowWithCategoria): Prato {
 }
 
 export async function listCategoriasPratosAtivas() {
+  if (categoriasAtivasCache && categoriasAtivasCache.expiresAt > Date.now()) {
+    return categoriasAtivasCache.data
+  }
+
+  if (categoriasAtivasPromise) {
+    return categoriasAtivasPromise
+  }
+
+  categoriasAtivasPromise = listCategoriasPratosAtivasFromSupabase().finally(() => {
+    categoriasAtivasPromise = null
+  })
+
+  return categoriasAtivasPromise
+}
+
+async function listCategoriasPratosAtivasFromSupabase() {
   const { data, error } = await supabase
     .from('categorias_pratos')
     .select('*')
@@ -66,7 +94,13 @@ export async function listCategoriasPratosAtivas() {
     throw new Error(getFriendlyError(error.message))
   }
 
-  return data ?? []
+  const result = data ?? []
+  categoriasAtivasCache = {
+    data: result,
+    expiresAt: Date.now() + categoriasCacheTtlMs,
+  }
+
+  return result
 }
 
 export async function listPratos(filters: PratoFilters): Promise<PratoListResult> {
@@ -166,6 +200,9 @@ export async function savePrato(values: PratoFormValues, pratoId?: string) {
   if (response.error) {
     throw new Error(getFriendlyError(response.error.message))
   }
+
+  invalidateCategoriasPratosAtivasCache()
+  invalidateDashboardCache()
 }
 
 export async function setPratoAtivo(id: string, ativo: boolean) {
@@ -174,6 +211,8 @@ export async function setPratoAtivo(id: string, ativo: boolean) {
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  invalidateDashboardCache()
 }
 
 export async function listPratosAbaPlanilha(categoriaId: string) {
@@ -243,4 +282,6 @@ export async function updateQuantidadeItemAbaPlanilha(
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  invalidateDashboardCache()
 }

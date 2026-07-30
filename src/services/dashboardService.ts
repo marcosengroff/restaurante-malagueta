@@ -40,6 +40,15 @@ type ItemRow = {
   pratos: { id: string; nome: string } | null
 }
 
+const cacheTtlMs = 30_000
+let dashboardCache: { data: DashboardData; expiresAt: number } | null = null
+let dashboardPromise: Promise<DashboardData> | null = null
+
+export function invalidateDashboardCache() {
+  dashboardCache = null
+  dashboardPromise = null
+}
+
 function getFriendlyError(message: string) {
   if (message.includes('permission denied') || message.includes('row-level security')) {
     return 'Usuario sem permissao para carregar o painel.'
@@ -53,6 +62,22 @@ function getFriendlyError(message: string) {
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
+  if (dashboardCache && dashboardCache.expiresAt > Date.now()) {
+    return dashboardCache.data
+  }
+
+  if (dashboardPromise) {
+    return dashboardPromise
+  }
+
+  dashboardPromise = getDashboardDataFromSupabase().finally(() => {
+    dashboardPromise = null
+  })
+
+  return dashboardPromise
+}
+
+async function getDashboardDataFromSupabase(): Promise<DashboardData> {
   const [
     pratosResponse,
     ingredientesResponse,
@@ -163,7 +188,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     .sort()
     .at(-1) ?? null
 
-  return {
+  const dashboardData: DashboardData = {
     stats: {
       totalPratos: pratos.length,
       totalIngredientes: ingredientes.length,
@@ -192,6 +217,13 @@ export async function getDashboardData(): Promise<DashboardData> {
         : false,
     },
   }
+
+  dashboardCache = {
+    data: dashboardData,
+    expiresAt: Date.now() + cacheTtlMs,
+  }
+
+  return dashboardData
 }
 
 function groupItemsByPrato(itens: ItemRow[]) {

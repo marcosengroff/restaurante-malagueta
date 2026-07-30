@@ -8,6 +8,7 @@ import type {
   StatusFiltro,
 } from '../types/ingrediente'
 import { getUnidadeBase, normalizeNome } from '../utils/ingredientes'
+import { invalidateDashboardCache } from './dashboardService'
 
 const ordemCategoriasIngredientes = [
   'CARNES E PROTEÍNAS',
@@ -20,6 +21,17 @@ const ordemCategoriasIngredientes = [
   'TEMPEROS, ERVAS E CONDIMENTOS',
   'DOCES, CHOCOLATES E SOBREMESAS',
 ]
+
+const categoriasCacheTtlMs = 60_000
+let categoriasIngredientesCache:
+  | { data: CategoriaIngrediente[]; expiresAt: number }
+  | null = null
+let categoriasIngredientesPromise: Promise<CategoriaIngrediente[]> | null = null
+
+export function invalidateCategoriasIngredientesCache() {
+  categoriasIngredientesCache = null
+  categoriasIngredientesPromise = null
+}
 
 type IngredienteRowWithCategoria = {
   id: string
@@ -100,6 +112,27 @@ export async function listAllIngredientes(
 }
 
 export async function listCategoriasIngredientes() {
+  if (
+    categoriasIngredientesCache &&
+    categoriasIngredientesCache.expiresAt > Date.now()
+  ) {
+    return categoriasIngredientesCache.data
+  }
+
+  if (categoriasIngredientesPromise) {
+    return categoriasIngredientesPromise
+  }
+
+  categoriasIngredientesPromise = listCategoriasIngredientesFromSupabase().finally(
+    () => {
+      categoriasIngredientesPromise = null
+    },
+  )
+
+  return categoriasIngredientesPromise
+}
+
+async function listCategoriasIngredientesFromSupabase() {
   const { data, error } = await supabase
     .from('categorias_ingredientes')
     .select('*')
@@ -110,7 +143,7 @@ export async function listCategoriasIngredientes() {
     throw new Error(error.message)
   }
 
-  return [...(data ?? [])].sort((a, b) => {
+  const result = [...(data ?? [])].sort((a, b) => {
     const ordemA = ordemCategoriasIngredientes.indexOf(a.nome)
     const ordemB = ordemCategoriasIngredientes.indexOf(b.nome)
 
@@ -120,6 +153,13 @@ export async function listCategoriasIngredientes() {
 
     return a.nome.localeCompare(b.nome, 'pt-BR')
   })
+
+  categoriasIngredientesCache = {
+    data: result,
+    expiresAt: Date.now() + categoriasCacheTtlMs,
+  }
+
+  return result
 }
 
 async function findCategoriaIdsBySearch(search: string) {
@@ -249,6 +289,9 @@ export async function saveIngrediente(
   if (response.error) {
     throw new Error(getDuplicateMessage(response.error.message))
   }
+
+  invalidateCategoriasIngredientesCache()
+  invalidateDashboardCache()
 }
 
 export async function setIngredienteAtivo(id: string, ativo: boolean) {
@@ -257,6 +300,8 @@ export async function setIngredienteAtivo(id: string, ativo: boolean) {
   if (error) {
     throw new Error(getDuplicateMessage(error.message))
   }
+
+  invalidateDashboardCache()
 }
 
 export async function countItensFichaTecnicaByIngrediente(id: string) {

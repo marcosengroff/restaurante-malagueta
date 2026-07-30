@@ -98,7 +98,7 @@ export function MainLayout() {
     listCategoriasPratosMenu()
       .then((categorias) => {
         setAbasPlanilha(
-          categorias.map((categoria) => ({
+          (categorias ?? []).map((categoria) => ({
             id: categoria.id,
             nome: categoria.nome,
           })),

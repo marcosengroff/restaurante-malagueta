@@ -5,6 +5,7 @@ import type {
   CategoriaIngredienteListResult,
 } from '../types/categoriaIngrediente'
 import { normalizeNome } from '../utils/ingredientes'
+import { invalidateCategoriasIngredientesCache } from './ingredientesService'
 
 function getFriendlyError(message: string) {
   if (message.includes('categorias_ingredientes_nome_unique')) {
@@ -25,21 +26,28 @@ function getFriendlyError(message: string) {
 async function countIngredientesAtivosByCategoria(categoriaIds: string[]) {
   const counts = new Map<string, number>()
 
-  await Promise.all(
-    categoriaIds.map(async (categoriaId) => {
-      const { count, error } = await supabase
-        .from('ingredientes')
-        .select('id', { count: 'exact', head: true })
-        .eq('categoria_id', categoriaId)
-        .eq('ativo', true)
+  if (categoriaIds.length === 0) {
+    return counts
+  }
 
-      if (error) {
-        throw new Error(getFriendlyError(error.message))
-      }
+  const { data, error } = await supabase
+    .from('ingredientes')
+    .select('categoria_id')
+    .eq('ativo', true)
+    .in('categoria_id', categoriaIds)
 
-      counts.set(categoriaId, count ?? 0)
-    }),
-  )
+  if (error) {
+    throw new Error(getFriendlyError(error.message))
+  }
+
+  ;(data ?? []).forEach((ingrediente) => {
+    if (ingrediente.categoria_id) {
+      counts.set(
+        ingrediente.categoria_id,
+        (counts.get(ingrediente.categoria_id) ?? 0) + 1,
+      )
+    }
+  })
 
   return counts
 }
@@ -130,6 +138,8 @@ export async function saveCategoriaIngrediente(
   if (response.error) {
     throw new Error(getFriendlyError(response.error.message))
   }
+
+  invalidateCategoriasIngredientesCache()
 }
 
 export async function setCategoriaIngredienteAtivo(id: string, ativo: boolean) {
@@ -141,4 +151,6 @@ export async function setCategoriaIngredienteAtivo(id: string, ativo: boolean) {
   if (error) {
     throw new Error(getFriendlyError(error.message))
   }
+
+  invalidateCategoriasIngredientesCache()
 }
